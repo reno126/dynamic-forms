@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import {
     Table,
     TableBody,
@@ -32,7 +33,14 @@ export function FormList() {
             <TableBody>
                 {formDefinitions.map((form: FormDefinition) => (
                     <TableRow key={form.id}>
-                        <TableCell className="font-medium">{form.name}</TableCell>
+                        <TableCell className="font-medium">
+                            <Link
+                                href={`/forms/${form.id}`}
+                                className="hover:underline"
+                            >
+                                {form.name}
+                            </Link>
+                        </TableCell>
                         <TableCell>{form.description}</TableCell>
                         <TableCell className="text-right">{form.fields.length}</TableCell>
                     </TableRow>

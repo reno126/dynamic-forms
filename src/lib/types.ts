@@ -5,6 +5,14 @@ export type FormFieldType =
     | 'select'
     | 'checkbox';
 
+export const FORM_FIELD_TYPES = [
+    'text',
+    'number',
+    'date',
+    'select',
+    'checkbox',
+] as const;
+
 export interface FormFieldOption {
     value: string;
     label: string;

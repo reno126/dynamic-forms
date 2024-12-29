@@ -1,8 +1,6 @@
 'use client';
 
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import {
     Dialog,
     DialogContent,
@@ -23,34 +21,22 @@ import {
 } from '@/components/ui/select';
 import { TrashIcon, PlusIcon } from 'lucide-react';
 import { useFormDefinitions } from '@/contexts/FormDefinitionsContext';
-import { FormFieldType } from '@/lib/types';
+import { FORM_FIELD_TYPES, type FormFieldType } from '@/lib/types';
 
-const formFieldSchema = z.object({
-    name: z.string().min(1, 'Name is required'),
-    label: z.string().min(1, 'Label is required'),
-    type: z.nativeEnum(FormFieldType),
-});
-
-const createFormSchema = z.object({
-    name: z.string().min(1, 'Form name is required'),
-    description: z.string().optional(),
-    fields: z.array(formFieldSchema).min(1, 'At least one field is required'),
-});
-
-type CreateFormValues = z.infer<typeof createFormSchema>;
+type CreateFormValues = {
+    name: string;
+    description?: string;
+    fields: {
+        name: string;
+        label: string;
+        type: FormFieldType;
+    }[];
+};
 
 interface CreateFormDialogProps {
     isOpen: boolean;
     onClose: () => void;
 }
-
-const fieldTypes: FormFieldType[] = [
-    'text',
-    'number',
-    'date',
-    'select',
-    'checkbox',
-];
 
 export function CreateFormDialog({ isOpen, onClose }: CreateFormDialogProps) {
     const { addForm } = useFormDefinitions();
@@ -61,7 +47,6 @@ export function CreateFormDialog({ isOpen, onClose }: CreateFormDialogProps) {
         formState: { errors },
         reset,
     } = useForm<CreateFormValues>({
-        resolver: zodResolver(createFormSchema),
         defaultValues: {
             name: '',
             description: '',
@@ -72,18 +57,30 @@ export function CreateFormDialog({ isOpen, onClose }: CreateFormDialogProps) {
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'fields',
+        rules: {
+            minLength: {
+                value: 1,
+                message: 'At least one field is required.',
+            },
+        },
     });
 
+    const handleClose = () => {
+        reset();
+        onClose();
+    };
+
     const onSubmit = async (data: CreateFormValues) => {
-        // TODO: Connect this to the context
-        console.log(data);
-        // await addForm(data);
-        // reset();
-        // onClose();
+        const dataToSave = {
+            ...data,
+            description: data.description || '',
+        };
+        await addForm(dataToSave);
+        handleClose();
     };
 
     return (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog open={isOpen} onOpenChange={handleClose}>
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
                     <DialogTitle>Create New Form</DialogTitle>
@@ -91,7 +88,10 @@ export function CreateFormDialog({ isOpen, onClose }: CreateFormDialogProps) {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div>
                         <Label htmlFor="name">Form Name</Label>
-                        <Input id="name" {...register('name')} />
+                        <Input
+                            id="name"
+                            {...register('name', { required: 'Form name is required' })}
+                        />
                         {errors.name && (
                             <p className="text-sm text-red-500">{errors.name.message}</p>
                         )}
@@ -104,26 +104,36 @@ export function CreateFormDialog({ isOpen, onClose }: CreateFormDialogProps) {
                     <div className="space-y-4">
                         <Label>Fields</Label>
                         {fields.map((field, index) => (
-                            <div key={field.id} className="flex items-end space-x-2">
-                                <div className="flex-1">
+                            <div key={field.id} className="flex items-start space-x-2">
+                                <div className="flex-1 space-y-1">
                                     <Label htmlFor={`fields.${index}.name`} className="sr-only">
                                         Name
                                     </Label>
                                     <Input
                                         placeholder="Field Name (e.g., firstName)"
-                                        {...register(`fields.${index}.name`)}
+                                        {...register(`fields.${index}.name`, {
+                                            required: 'Name is required',
+                                        })}
                                     />
+                                    {errors.fields?.[index]?.name && (
+                                        <p className="text-sm text-red-500">{errors.fields[index]?.name?.message}</p>
+                                    )}
                                 </div>
-                                <div className="flex-1">
+                                <div className="flex-1 space-y-1">
                                     <Label htmlFor={`fields.${index}.label`} className="sr-only">
                                         Label
                                     </Label>
                                     <Input
                                         placeholder="Field Label (e.g., First Name)"
-                                        {...register(`fields.${index}.label`)}
+                                        {...register(`fields.${index}.label`, {
+                                            required: 'Label is required',
+                                        })}
                                     />
+                                    {errors.fields?.[index]?.label && (
+                                        <p className="text-sm text-red-500">{errors.fields[index]?.label?.message}</p>
+                                    )}
                                 </div>
-                                <div>
+                                <div className="flex-shrink-0">
                                     <Label htmlFor={`fields.${index}.type`} className="sr-only">
                                         Type
                                     </Label>
@@ -136,7 +146,7 @@ export function CreateFormDialog({ isOpen, onClose }: CreateFormDialogProps) {
                                                     <SelectValue placeholder="Type" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {fieldTypes.map((type) => (
+                                                    {FORM_FIELD_TYPES.map((type) => (
                                                         <SelectItem key={type} value={type}>
                                                             {type}
                                                         </SelectItem>
@@ -152,13 +162,16 @@ export function CreateFormDialog({ isOpen, onClose }: CreateFormDialogProps) {
                                     size="icon"
                                     onClick={() => remove(index)}
                                     disabled={fields.length <= 1}
+                                    className="flex-shrink-0 mt-auto"
                                 >
                                     <TrashIcon className="h-4 w-4" />
                                 </Button>
                             </div>
                         ))}
-                        {errors.fields && (
-                            <p className="text-sm text-red-500">{errors.fields.message}</p>
+                        {errors.fields?.root && (
+                            <p className="text-sm text-red-500">
+                                {errors.fields.root.message}
+                            </p>
                         )}
                     </div>
 
