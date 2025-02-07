@@ -14,6 +14,8 @@ import type { FormRecord, FormRecordData } from '@/lib/types';
 type RecordsContextType = {
     records: FormRecord[] | undefined;
     addRecord: (data: FormRecordData) => Promise<void>;
+    updateRecord: (record: FormRecord) => Promise<void>;
+    deleteRecord: (id: string) => Promise<void>;
 };
 
 const RecordsContext = createContext<RecordsContextType | undefined>(
@@ -50,9 +52,27 @@ export function RecordsProvider({
         [formId]
     );
 
+    const updateRecord = useCallback(async (record: FormRecord) => {
+        try {
+            await db.formRecords.put(record);
+        } catch (error) {
+            console.error('Failed to update record:', error);
+        }
+    }, []);
+
+    const deleteRecord = useCallback(async (id: string) => {
+        try {
+            await db.formRecords.delete(id);
+        } catch (error) {
+            console.error('Failed to delete record:', error);
+        }
+    }, []);
+
     const value = {
         records,
         addRecord,
+        updateRecord,
+        deleteRecord,
     };
 
     return (

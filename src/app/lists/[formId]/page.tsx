@@ -1,10 +1,14 @@
 'use client';
 
-import { RecordsProvider } from '@/contexts/RecordsContext';
+import { useState } from 'react';
+import { RecordsProvider, useRecords } from '@/contexts/RecordsContext';
 import { useFormDefinition } from '@/hooks/useFormDefinition';
 import Link from 'next/link';
 import { ArrowLeft, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { RecordsTable } from '@/components/records/RecordsTable';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { AddRecordDialog } from '@/components/records/AddRecordDialog';
 
 interface RecordsListPageProps {
     params: {
@@ -13,9 +17,11 @@ interface RecordsListPageProps {
 }
 
 function RecordsListView({ formId }: { formId: string }) {
+    const [isAddDialogOpen, setAddDialogOpen] = useState(false);
     const formDefinition = useFormDefinition(formId);
+    const { records } = useRecords();
 
-    if (formDefinition === undefined) {
+    if (formDefinition === undefined || records === undefined) {
         return <div>Loading...</div>;
     }
 
@@ -23,47 +29,62 @@ function RecordsListView({ formId }: { formId: string }) {
         return <div>Form not found.</div>;
     }
 
-    const handleAddRecord = () => {
-        // TODO: Implement dialog
-        console.log('Add record clicked');
-    };
+    const hasRecords = records && records.length > 0;
 
     return (
-        <div className="space-y-6">
-            <div>
-                <Link
-                    href="/lists"
-                    className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
-                >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to all lists
-                </Link>
-            </div>
-            <div className="sm:flex sm:items-center sm:justify-between">
+        <>
+            <div className="space-y-6">
                 <div>
-                    <h1 className="text-2xl font-semibold text-gray-900">
-                        {formDefinition.name}
-                    </h1>
-                    <p className="mt-2 text-sm text-gray-700">
-                        A list of all records submitted to this form.
-                    </p>
+                    <Link
+                        href="/lists"
+                        className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
+                    >
+                        <ArrowLeft className="mr-2 h-4 w-4" />
+                        Back to all lists
+                    </Link>
                 </div>
-                <div className="mt-4 sm:ml-16 sm:mt-0">
-                    <Button onClick={handleAddRecord}>
-                        <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-                        Add New Record
-                    </Button>
+                <div className="sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <h1 className="text-2xl font-semibold text-gray-900">
+                            {formDefinition.name}
+                        </h1>
+                        <p className="mt-2 text-sm text-gray-700">
+                            A list of all records submitted to this form.
+                        </p>
+                    </div>
+                    <div className="mt-4 sm:ml-16 sm:mt-0">
+                        <Button onClick={() => setAddDialogOpen(true)}>
+                            <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+                            Add New Record
+                        </Button>
+                    </div>
                 </div>
-            </div>
 
-            {/* TODO: Implement Records Table and Empty State */}
-            <div className="mt-8">
-                <p>Records table will go here...</p>
+                <div className="mt-8">
+                    {hasRecords ? (
+                        <RecordsTable formDefinition={formDefinition} />
+                    ) : (
+                        <EmptyState
+                            title="No records yet"
+                            description="Get started by adding the first record for this form."
+                            actions={
+                                <Button onClick={() => setAddDialogOpen(true)}>
+                                    <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+                                    Add New Record
+                                </Button>
+                            }
+                        />
+                    )}
+                </div>
             </div>
-        </div>
+            <AddRecordDialog
+                isOpen={isAddDialogOpen}
+                onClose={() => setAddDialogOpen(false)}
+                formDefinition={formDefinition}
+            />
+        </>
     );
 }
-
 
 export default function RecordsListPage({ params }: RecordsListPageProps) {
     return (
