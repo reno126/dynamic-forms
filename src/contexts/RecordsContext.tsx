@@ -16,6 +16,7 @@ type RecordsContextType = {
     addRecord: (data: FormRecordData) => Promise<void>;
     updateRecord: (record: FormRecord) => Promise<void>;
     deleteRecord: (id: string) => Promise<void>;
+    deleteAllRecords: () => Promise<void>;
 };
 
 const RecordsContext = createContext<RecordsContextType | undefined>(
@@ -68,11 +69,20 @@ export function RecordsProvider({
         }
     }, []);
 
+    const deleteAllRecords = useCallback(async () => {
+        try {
+            await db.formRecords.where('formId').equals(formId).delete();
+        } catch (error) {
+            console.error('Failed to delete all records:', error);
+        }
+    }, [formId]);
+
     const value = {
         records,
         addRecord,
         updateRecord,
         deleteRecord,
+        deleteAllRecords,
     };
 
     return (

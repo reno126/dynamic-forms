@@ -20,6 +20,7 @@ type FormDefinitionsContextType = {
     ) => Promise<void>;
     updateForm: (form: FormDefinition) => Promise<void>;
     deleteForm: (id: string) => Promise<void>;
+    deleteAllData: () => Promise<void>;
 };
 
 const FormDefinitionsContext = createContext<
@@ -70,11 +71,21 @@ export function FormDefinitionsProvider({ children }: { children: ReactNode }) {
         }
     }, []);
 
+    const deleteAllData = useCallback(async () => {
+        try {
+            await db.delete();
+            await db.open();
+        } catch (error) {
+            console.error('Failed to delete all data:', error);
+        }
+    }, []);
+
     const value = {
         formDefinitions,
         addForm,
         updateForm,
         deleteForm,
+        deleteAllData,
     };
 
     return (

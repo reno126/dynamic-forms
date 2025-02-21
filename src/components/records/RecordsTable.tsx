@@ -9,8 +9,8 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import type { FormDefinition, FormRecordData } from '@/lib/types';
-import { useMemo } from 'react';
+import type { FormDefinition, FormRecord, FormRecordData } from '@/lib/types';
+import { useMemo, useState } from 'react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,6 +19,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { EditRecordDialog } from './EditRecordDialog';
 
 interface RecordsTableProps {
     formDefinition: FormDefinition;
@@ -38,7 +49,9 @@ function formatCell(data: FormRecordData[string]): string {
 }
 
 export function RecordsTable({ formDefinition }: RecordsTableProps) {
-    const { records } = useRecords();
+    const { records, deleteRecord } = useRecords();
+    const [recordToEdit, setRecordToEdit] = useState<FormRecord | null>(null);
+    const [recordToDelete, setRecordToDelete] = useState<FormRecord | null>(null);
 
     const tableHeaders = useMemo(() => {
         return formDefinition.fields.map((field) => (
@@ -65,8 +78,13 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600">
+                            <DropdownMenuItem onClick={() => setRecordToEdit(record)}>
+                                Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => setRecordToDelete(record)}
+                                className="text-red-600"
+                            >
                                 Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -76,32 +94,67 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
         ));
     }, [records, formDefinition.fields]);
 
+    const handleDeleteConfirm = () => {
+        if (recordToDelete) {
+            deleteRecord(recordToDelete.id);
+            setRecordToDelete(null);
+        }
+    };
+
     return (
-        <div className="overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        {tableHeaders}
-                        <TableHead>
-                            <span className="sr-only">Actions</span>
-                        </TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {records && records.length > 0 ? (
-                        tableRows
-                    ) : (
+        <>
+            <div className="overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                <Table>
+                    <TableHeader>
                         <TableRow>
-                            <TableCell
-                                colSpan={formDefinition.fields.length + 1}
-                                className="text-center"
-                            >
-                                No records yet.
-                            </TableCell>
+                            {tableHeaders}
+                            <TableHead>
+                                <span className="sr-only">Actions</span>
+                            </TableHead>
                         </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </div>
+                    </TableHeader>
+                    <TableBody>
+                        {records && records.length > 0 ? (
+                            tableRows
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={formDefinition.fields.length + 1}
+                                    className="text-center"
+                                >
+                                    No records yet.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            <EditRecordDialog
+                isOpen={!!recordToEdit}
+                onClose={() => setRecordToEdit(null)}
+                formDefinition={formDefinition}
+                record={recordToEdit}
+            />
+            <AlertDialog
+                open={!!recordToDelete}
+                onOpenChange={() => setRecordToDelete(null)}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the
+                            record.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteConfirm}>
+                            Continue
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 } 

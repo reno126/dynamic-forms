@@ -9,6 +9,16 @@ import { Button } from '@/components/ui/button';
 import { RecordsTable } from '@/components/records/RecordsTable';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { AddRecordDialog } from '@/components/records/AddRecordDialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface RecordsListPageProps {
     params: {
@@ -18,8 +28,9 @@ interface RecordsListPageProps {
 
 function RecordsListView({ formId }: { formId: string }) {
     const [isAddDialogOpen, setAddDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const formDefinition = useFormDefinition(formId);
-    const { records } = useRecords();
+    const { records, deleteAllRecords } = useRecords();
 
     if (formDefinition === undefined || records === undefined) {
         return <div>Loading...</div>;
@@ -30,6 +41,11 @@ function RecordsListView({ formId }: { formId: string }) {
     }
 
     const hasRecords = records && records.length > 0;
+
+    const handleDeleteAll = () => {
+        deleteAllRecords();
+        setDeleteDialogOpen(false);
+    };
 
     return (
         <>
@@ -52,7 +68,15 @@ function RecordsListView({ formId }: { formId: string }) {
                             A list of all records submitted to this form.
                         </p>
                     </div>
-                    <div className="mt-4 sm:ml-16 sm:mt-0">
+                    <div className="mt-4 flex space-x-2 sm:ml-16 sm:mt-0">
+                        {hasRecords && (
+                            <Button
+                                variant="destructive"
+                                onClick={() => setDeleteDialogOpen(true)}
+                            >
+                                Delete All Records
+                            </Button>
+                        )}
                         <Button onClick={() => setAddDialogOpen(true)}>
                             <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
                             Add New Record
@@ -82,6 +106,26 @@ function RecordsListView({ formId }: { formId: string }) {
                 onClose={() => setAddDialogOpen(false)}
                 formDefinition={formDefinition}
             />
+            <AlertDialog
+                open={isDeleteDialogOpen}
+                onOpenChange={setDeleteDialogOpen}
+            >
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete all
+                            records for this form.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleDeleteAll}>
+                            Continue
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     );
 }
