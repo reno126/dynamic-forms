@@ -53,9 +53,12 @@ export default function FormDetailsPage({ params }: FormDetailsPageProps) {
                                 key={field.id}
                                 className="flex items-center justify-between rounded-md border p-4"
                             >
-                                <div>
-                                    <p className="font-semibold">{field.label}</p>
-                                    <p className="text-sm text-gray-500">{field.name}</p>
+                                <div className="flex items-center space-x-4">
+                                    <div>
+                                        <p className="font-semibold">{field.label}</p>
+                                        <p className="text-sm text-gray-500">{field.name}</p>
+                                    </div>
+                                    {field.isRequired && <Badge variant="outline">Required</Badge>}
                                 </div>
                                 <Badge variant="secondary">{field.type}</Badge>
                             </div>

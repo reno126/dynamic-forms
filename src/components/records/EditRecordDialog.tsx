@@ -36,13 +36,16 @@ function renderField(field: FormField, control: any, errors: any) {
     const error = errors[fieldName];
     const isCheckbox = field.type === 'checkbox';
 
+    const rules = field.isRequired ? { required: `${field.label} is required.` } : {};
+
     return (
         <>
-            {!isCheckbox && <Label htmlFor={field.id}>{field.label}</Label>}
+            {!isCheckbox && <Label htmlFor={field.id}>{field.label}{field.isRequired && '*'}</Label>}
             <Controller
                 name={fieldName}
                 control={control}
                 defaultValue={isCheckbox ? false : ''}
+                rules={rules}
                 render={({ field: controllerField }) => {
                     switch (field.type) {
                         case 'text':

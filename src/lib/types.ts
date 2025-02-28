@@ -24,6 +24,7 @@ export interface FormField {
     label: string;
     type: FormFieldType;
     options?: FormFieldOption[];
+    isRequired?: boolean;
 }
 
 export interface FormDefinition {
