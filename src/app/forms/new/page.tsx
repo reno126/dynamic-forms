@@ -18,6 +18,7 @@ import { useFormDefinitions } from '@/contexts/FormDefinitionsContext';
 import { FORM_FIELD_TYPES, type FormFieldType } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
+import { nanoid } from 'nanoid';
 
 type CreateFormValues = {
     name: string;
@@ -43,7 +44,7 @@ export default function CreateFormPage() {
         defaultValues: {
             name: '',
             description: '',
-            fields: [{ name: '', label: '', type: 'text', isRequired: false }],
+            fields: [{ name: `field_${nanoid(6)}`, label: '', type: 'text', isRequired: false }],
         },
     });
 
@@ -103,20 +104,6 @@ export default function CreateFormPage() {
                             <Label>Fields</Label>
                             {fields.map((field, index) => (
                                 <div key={field.id} className="flex items-start space-x-2">
-                                    <div className="flex-1 space-y-1">
-                                        <Label htmlFor={`fields.${index}.name`} className="sr-only">
-                                            Name
-                                        </Label>
-                                        <Input
-                                            placeholder="Field Name (e.g., firstName)"
-                                            {...register(`fields.${index}.name`, {
-                                                required: 'Name is required',
-                                            })}
-                                        />
-                                        {errors.fields?.[index]?.name && (
-                                            <p className="text-sm text-red-500">{errors.fields[index]?.name?.message}</p>
-                                        )}
-                                    </div>
                                     <div className="flex-1 space-y-1">
                                         <Label htmlFor={`fields.${index}.label`} className="sr-only">
                                             Label
@@ -191,7 +178,7 @@ export default function CreateFormPage() {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => append({ name: '', label: '', type: 'text', isRequired: false })}
+                            onClick={() => append({ name: `field_${nanoid(6)}`, label: '', type: 'text', isRequired: false })}
                         >
                             <PlusIcon className="mr-2 h-4 w-4" />
                             Add Field
