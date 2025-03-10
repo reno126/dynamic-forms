@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useFormDefinition } from '@/hooks/useFormDefinition';
 import {
     Card,
@@ -13,13 +14,14 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 interface FormDetailsPageProps {
-    params: {
+    params: Promise<{
         formId: string;
-    };
+    }>;
 }
 
 export default function FormDetailsPage({ params }: FormDetailsPageProps) {
-    const formDefinition = useFormDefinition(params.formId);
+    const { formId } = React.use(params);
+    const formDefinition = useFormDefinition(formId);
 
     if (formDefinition === undefined) {
         return <div>Loading form details...</div>;
@@ -50,7 +52,7 @@ export default function FormDetailsPage({ params }: FormDetailsPageProps) {
                     <div className="space-y-4">
                         {formDefinition.fields.map((field) => (
                             <div
-                                key={field.id}
+                                key={field.name}
                                 className="flex items-center justify-between rounded-md border p-4"
                             >
                                 <div className="flex items-center space-x-4">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { RecordsProvider, useRecords } from '@/contexts/RecordsContext';
 import { useFormDefinition } from '@/hooks/useFormDefinition';
 import Link from 'next/link';
@@ -21,9 +21,9 @@ import {
 } from '@/components/ui/alert-dialog';
 
 interface RecordsListPageProps {
-    params: {
+    params: Promise<{
         formId: string;
-    };
+    }>;
 }
 
 function RecordsListView({ formId }: { formId: string }) {
@@ -131,9 +131,10 @@ function RecordsListView({ formId }: { formId: string }) {
 }
 
 export default function RecordsListPage({ params }: RecordsListPageProps) {
+    const { formId } = React.use(params);
     return (
-        <RecordsProvider formId={params.formId}>
-            <RecordsListView formId={params.formId} />
+        <RecordsProvider formId={formId}>
+            <RecordsListView formId={formId} />
         </RecordsProvider>
     );
 } 
