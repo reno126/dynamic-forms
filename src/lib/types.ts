@@ -23,7 +23,7 @@ export interface FormField {
     name: string;
     label: string;
     type: FormFieldType;
-    options?: FormFieldOption[];
+    options?: { value: string }[];
     isRequired?: boolean;
 }
 

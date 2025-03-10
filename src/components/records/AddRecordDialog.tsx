@@ -40,7 +40,7 @@ function renderField(field: FormField, control: any, errors: any) {
 
     return (
         <>
-            {!isCheckbox && <Label htmlFor={field.id}>{field.label}{field.isRequired && '*'}</Label>}
+            {!isCheckbox && <Label htmlFor={field.name}>{field.label}{field.isRequired && '*'}</Label>}
             <Controller
                 name={fieldName}
                 control={control}
@@ -49,20 +49,20 @@ function renderField(field: FormField, control: any, errors: any) {
                 render={({ field: controllerField }) => {
                     switch (field.type) {
                         case 'text':
-                            return <Input id={field.id} {...controllerField} value={controllerField.value || ''} />;
+                            return <Input id={field.name} {...controllerField} value={controllerField.value || ''} />;
                         case 'number':
-                            return <Input id={field.id} type="number" {...controllerField} value={controllerField.value || ''} />;
+                            return <Input id={field.name} type="number" {...controllerField} value={controllerField.value || ''} />;
                         case 'date':
-                            return <Input id={field.id} type="date" {...controllerField} value={controllerField.value || ''} />;
+                            return <Input id={field.name} type="date" {...controllerField} value={controllerField.value || ''} />;
                         case 'checkbox':
                             return (
                                 <div className="flex items-center space-x-2 h-10">
                                     <Checkbox
-                                        id={field.id}
+                                        id={field.name}
                                         checked={controllerField.value}
                                         onCheckedChange={controllerField.onChange}
                                     />
-                                    <Label htmlFor={field.id}>{field.label}</Label>
+                                    <Label htmlFor={field.name}>{field.label}</Label>
                                 </div>
                             );
                         case 'select':
@@ -71,13 +71,13 @@ function renderField(field: FormField, control: any, errors: any) {
                                     onValueChange={controllerField.onChange}
                                     value={controllerField.value}
                                 >
-                                    <SelectTrigger id={field.id}>
+                                    <SelectTrigger id={field.name}>
                                         <SelectValue placeholder="Select an option" />
                                     </SelectTrigger>
                                     <SelectContent>
                                         {(field.options || []).map((option) => (
                                             <SelectItem key={option.value} value={option.value}>
-                                                {option.label}
+                                                {option.value}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
@@ -124,7 +124,7 @@ export function AddRecordDialog({
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     {formDefinition.fields.map((field) => (
-                        <div key={field.id}>
+                        <div key={field.name}>
                             {renderField(field, control, errors)}
                         </div>
                     ))}
