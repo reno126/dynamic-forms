@@ -25,6 +25,7 @@ export interface FormField {
     type: FormFieldType;
     options?: { value: string }[];
     isRequired?: boolean;
+    isMultiSelect?: boolean;
 }
 
 export interface FormDefinition {

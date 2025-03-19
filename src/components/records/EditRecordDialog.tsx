@@ -23,6 +23,7 @@ import {
 import { useRecords } from '@/contexts/RecordsContext';
 import type { FormDefinition, FormRecordData, FormField, FormRecord } from '@/lib/types';
 import { Checkbox } from '@/components/ui/checkbox';
+import { MultiSelect, MultiSelectTrigger, MultiSelectContent } from '../ui/multi-select';
 
 interface EditRecordDialogProps {
     isOpen: boolean;
@@ -44,7 +45,7 @@ function renderField(field: FormField, control: any, errors: any) {
             <Controller
                 name={fieldName}
                 control={control}
-                defaultValue={isCheckbox ? false : ''}
+                defaultValue={isCheckbox ? false : field.isMultiSelect ? [] : ''}
                 rules={rules}
                 render={({ field: controllerField }) => {
                     switch (field.type) {
@@ -66,6 +67,24 @@ function renderField(field: FormField, control: any, errors: any) {
                                 </div>
                             );
                         case 'select':
+                            if (field.isMultiSelect) {
+                                return (
+                                    <MultiSelect
+                                        value={controllerField.value || []}
+                                        onValueChange={controllerField.onChange}
+                                        options={
+                                            field.options?.map((opt) => ({
+                                                value: opt.value,
+                                                label: opt.value,
+                                            })) || []
+                                        }
+                                        placeholder="Select options..."
+                                    >
+                                        <MultiSelectTrigger className="w-full" />
+                                        <MultiSelectContent />
+                                    </MultiSelect>
+                                );
+                            }
                             return (
                                 <Select
                                     onValueChange={controllerField.onChange}

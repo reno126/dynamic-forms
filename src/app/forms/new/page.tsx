@@ -29,6 +29,7 @@ type CreateFormValues = {
         type: FormFieldType;
         isRequired?: boolean;
         options?: { value: string }[];
+        isMultiSelect?: boolean;
     }[];
 };
 
@@ -46,7 +47,7 @@ export default function CreateFormPage() {
         defaultValues: {
             name: '',
             description: '',
-            fields: [{ name: `field_${nanoid(6)}`, label: '', type: 'text', isRequired: false, options: [] }],
+            fields: [{ name: `field_${nanoid(6)}`, label: '', type: 'text', isRequired: false, options: [], isMultiSelect: false }],
         },
     });
 
@@ -144,6 +145,7 @@ export default function CreateFormPage() {
                                                                 controllerField.onChange(value);
                                                                 if (value !== 'select') {
                                                                     setValue(`fields.${index}.options`, []);
+                                                                    setValue(`fields.${index}.isMultiSelect`, false);
                                                                 }
                                                             }}
                                                             value={controllerField.value}
@@ -188,7 +190,25 @@ export default function CreateFormPage() {
                                             </Button>
                                         </div>
                                         {isSelect && (
-                                            <OptionsEditor fieldIndex={index} control={control} register={register} errors={errors} />
+                                            <div className="mt-4 space-y-4">
+                                                <div className="flex items-center space-x-2">
+                                                    <Controller
+                                                        control={control}
+                                                        name={`fields.${index}.isMultiSelect`}
+                                                        render={({ field }) => (
+                                                            <Checkbox
+                                                                id={`fields.${index}.isMultiSelect`}
+                                                                checked={field.value}
+                                                                onCheckedChange={field.onChange}
+                                                            />
+                                                        )}
+                                                    />
+                                                    <Label htmlFor={`fields.${index}.isMultiSelect`}>
+                                                        Allow multiple selections
+                                                    </Label>
+                                                </div>
+                                                <OptionsEditor fieldIndex={index} control={control} register={register} errors={errors} />
+                                            </div>
                                         )}
                                     </div>
                                 );
@@ -204,7 +224,7 @@ export default function CreateFormPage() {
                             type="button"
                             variant="outline"
                             size="sm"
-                            onClick={() => append({ name: `field_${nanoid(6)}`, label: '', type: 'text', isRequired: false, options: [] })}
+                            onClick={() => append({ name: `field_${nanoid(6)}`, label: '', type: 'text', isRequired: false, options: [], isMultiSelect: false })}
                         >
                             <PlusIcon className="mr-2 h-4 w-4" />
                             Add Field
@@ -241,7 +261,7 @@ function OptionsEditor({ fieldIndex, control, register, errors }: { fieldIndex: 
     });
 
     return (
-        <div className="col-span-full w-full space-y-2 pt-4">
+        <div className="w-full space-y-2 pt-4 border-t">
             <Label className="text-sm font-medium">Options</Label>
             {fields.map((option, optionIndex) => (
                 <div key={option.id} className="flex items-center space-x-2">

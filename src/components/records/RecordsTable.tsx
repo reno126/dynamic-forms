@@ -30,12 +30,25 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { EditRecordDialog } from './EditRecordDialog';
+import { Badge } from '@/components/ui/badge';
 
 interface RecordsTableProps {
     formDefinition: FormDefinition;
 }
 
-function formatCell(data: FormRecordData[string]): string {
+function formatCell(data: FormRecordData[string], field: FormDefinition['fields'][0]): React.ReactNode {
+    if (field.isMultiSelect && Array.isArray(data)) {
+        return (
+            <div className="flex flex-wrap gap-1">
+                {data.map((item) => (
+                    <Badge key={item} variant="secondary">
+                        {item}
+                    </Badge>
+                ))}
+            </div>
+        );
+    }
+
     if (data instanceof Date) {
         return data.toLocaleDateString();
     }
@@ -55,7 +68,7 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
 
     const tableHeaders = useMemo(() => {
         return formDefinition.fields.map((field) => (
-            <TableHead key={field.id}>{field.label}</TableHead>
+            <TableHead key={field.name}>{field.label}</TableHead>
         ));
     }, [formDefinition.fields]);
 
@@ -65,8 +78,8 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
         return records.map((record) => (
             <TableRow key={record.id}>
                 {formDefinition.fields.map((field) => (
-                    <TableCell key={`${record.id}-${field.id}`}>
-                        {formatCell(record.data[field.name])}
+                    <TableCell key={`${record.id}-${field.name}`}>
+                        {formatCell(record.data[field.name], field)}
                     </TableCell>
                 ))}
                 <TableCell className="text-right">
