@@ -5,102 +5,88 @@ import {
     useContext,
     type ReactNode,
     useCallback,
+    useMemo,
 } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { nanoid } from 'nanoid';
 import { db } from '@/lib/db';
-import type { FormDefinition } from '@/lib/types';
+import type { FormDefinition, CreateFormValues } from '@/lib/types';
 
-type FormDefinitionsContextType = {
-    formDefinitions: FormDefinition[] | undefined;
-    addForm: (
-        form: Omit<FormDefinition, 'id' | 'fields'> & {
-            fields: Omit<FormDefinition['fields'][number], 'id'>[];
-        }
-    ) => Promise<void>;
-    updateForm: (form: FormDefinition) => Promise<void>;
+interface FormDefinitionsContextType {
+    formDefinitions: FormDefinition[] | null;
+    addForm: (form: CreateFormValues) => Promise<void>;
+    getFormDefinition: (id: string) => FormDefinition | undefined;
     deleteForm: (id: string) => Promise<void>;
     deleteAllData: () => Promise<void>;
-};
+}
 
-const FormDefinitionsContext = createContext<
-    FormDefinitionsContextType | undefined
->(undefined);
+const FormDefinitionsContext = createContext<FormDefinitionsContextType | null>(
+    null
+);
 
-export function FormDefinitionsProvider({ children }: { children: ReactNode }) {
+export const FormDefinitionsProvider = ({
+    children,
+}: {
+    children: React.ReactNode;
+}) => {
     const formDefinitions = useLiveQuery(() => db.formDefinitions.toArray(), []);
 
-    const addForm = useCallback(
-        async (
-            form: Omit<FormDefinition, 'id' | 'fields'> & {
-                fields: Omit<FormDefinition['fields'][number], 'id'>[];
-            }
-        ) => {
-            try {
-                const newForm: FormDefinition = {
-                    ...form,
-                    id: nanoid(),
-                    fields: form.fields.map((field) => ({ ...field, id: nanoid() })),
-                };
-                await db.formDefinitions.add(newForm);
-            } catch (error) {
-                console.error('Failed to add form:', error);
-                // Here we could add more robust error handling, like a toast notification
-            }
-        },
-        []
-    );
-
-    const updateForm = useCallback(async (form: FormDefinition) => {
-        try {
-            await db.formDefinitions.put(form);
-        } catch (error) {
-            console.error('Failed to update form:', error);
-        }
-    }, []);
-
-    const deleteForm = useCallback(async (id: string) => {
-        try {
-            // Also delete all associated records
-            await db.transaction('rw', db.formDefinitions, db.formRecords, async () => {
-                await db.formDefinitions.delete(id);
-                await db.formRecords.where('formId').equals(id).delete();
-            });
-        } catch (error) {
-            console.error('Failed to delete form:', error);
-        }
-    }, []);
-
-    const deleteAllData = useCallback(async () => {
-        try {
-            await db.delete();
-            await db.open();
-        } catch (error) {
-            console.error('Failed to delete all data:', error);
-        }
-    }, []);
-
-    const value = {
-        formDefinitions,
-        addForm,
-        updateForm,
-        deleteForm,
-        deleteAllData,
+    const addForm = async (form: CreateFormValues) => {
+        const newId = nanoid();
+        const newForm: FormDefinition = {
+            ...form,
+            id: newId,
+            description: form.description || '',
+            fields: form.fields.map((field) => ({
+                ...field,
+                id: nanoid(),
+                options: field.type === 'select' ? field.options || [] : [],
+            })),
+        };
+        await db.formDefinitions.add(newForm);
     };
+
+    const getFormDefinition = (id: string) => {
+        return formDefinitions?.find((form) => form.id === id);
+    };
+
+    const deleteForm = async (id: string) => {
+        await db.formDefinitions.delete(id);
+        // delete associated records
+        await db.formRecords.where('formId').equals(id).delete();
+    };
+
+    const deleteAllData = async () => {
+        // This will delete the entire database and all its data.
+        await db.delete();
+        // Re-open the database to re-create it.
+        await db.open();
+    };
+
+    const value = useMemo(
+        () => ({
+            formDefinitions: formDefinitions ?? null,
+            addForm,
+            getFormDefinition,
+            deleteForm,
+            deleteAllData,
+        }),
+        [formDefinitions]
+    );
 
     return (
         <FormDefinitionsContext.Provider value={value}>
             {children}
         </FormDefinitionsContext.Provider>
     );
-}
+};
 
-export function useFormDefinitions() {
+export const useFormDefinitions = () => {
     const context = useContext(FormDefinitionsContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error(
             'useFormDefinitions must be used within a FormDefinitionsProvider'
         );
     }
     return context;
-} 
+}; 

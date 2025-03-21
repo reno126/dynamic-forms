@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata = {
   title: 'Dynamic Forms App',
-  description: 'Create and manage dynamic forms with ease.',
+  description: 'Create and manage dynamic forms.',
 };
 
 export default function RootLayout({
@@ -30,7 +30,6 @@ export default function RootLayout({
           <div className="flex h-full">
             <Sidebar />
             <div className="flex min-w-0 flex-1 flex-col">
-              {/* The header can be used for global actions or user info in the future */}
               <Header />
               <PageWrapper>{children}</PageWrapper>
             </div>

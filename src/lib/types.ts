@@ -5,14 +5,6 @@ export type FormFieldType =
     | 'select'
     | 'checkbox';
 
-export const FORM_FIELD_TYPES = [
-    'text',
-    'number',
-    'date',
-    'select',
-    'checkbox',
-] as const;
-
 export interface FormFieldOption {
     value: string;
     label: string;
@@ -37,7 +29,7 @@ export interface FormDefinition {
 
 export type FormRecordData = Record<
     string,
-    string | number | boolean | Date | null
+    string | number | boolean | Date | string[] | null
 >;
 
 export interface FormRecord {
@@ -45,4 +37,19 @@ export interface FormRecord {
     formId: string;
     data: FormRecordData;
     createdAt: Date;
-} 
+}
+
+export type FormBuilderField = {
+    name: string;
+    label: string;
+    type: FormFieldType;
+    isRequired?: boolean;
+    options?: { value: string }[];
+    isMultiSelect?: boolean;
+};
+
+export type CreateFormValues = {
+    name: string;
+    description?: string;
+    fields: FormBuilderField[];
+}; 

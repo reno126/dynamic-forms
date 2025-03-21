@@ -9,7 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import type { FormDefinition, FormRecord, FormRecordData } from '@/lib/types';
+import type { FormDefinition, FormRecord } from '@/lib/types';
 import { useMemo, useState } from 'react';
 import {
     DropdownMenu,
@@ -30,35 +30,10 @@ import {
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { EditRecordDialog } from './EditRecordDialog';
-import { Badge } from '@/components/ui/badge';
+import { formatCell } from '@/lib/utils';
 
 interface RecordsTableProps {
     formDefinition: FormDefinition;
-}
-
-function formatCell(data: FormRecordData[string], field: FormDefinition['fields'][0]): React.ReactNode {
-    if (field.isMultiSelect && Array.isArray(data)) {
-        return (
-            <div className="flex flex-wrap gap-1">
-                {data.map((item) => (
-                    <Badge key={item} variant="secondary">
-                        {item}
-                    </Badge>
-                ))}
-            </div>
-        );
-    }
-
-    if (data instanceof Date) {
-        return data.toLocaleDateString();
-    }
-    if (typeof data === 'boolean') {
-        return data ? 'Yes' : 'No';
-    }
-    if (data === null || data === undefined) {
-        return 'N/A';
-    }
-    return String(data);
 }
 
 export function RecordsTable({ formDefinition }: RecordsTableProps) {
@@ -105,7 +80,7 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
                 </TableCell>
             </TableRow>
         ));
-    }, [records, formDefinition.fields]);
+    }, [records, formDefinition.fields, deleteRecord]);
 
     const handleDeleteConfirm = () => {
         if (recordToDelete) {
