@@ -29,7 +29,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { EditRecordDialog } from './EditRecordDialog';
+import { AddOrUpdateRecordDialog } from './AddOrUpdateRecordDialog';
 import { formatCell } from '@/lib/utils';
 
 interface RecordsTableProps {
@@ -117,12 +117,16 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
                     </TableBody>
                 </Table>
             </div>
-            <EditRecordDialog
-                isOpen={!!recordToEdit}
-                onClose={() => setRecordToEdit(null)}
-                formDefinition={formDefinition}
-                record={recordToEdit}
-            />
+
+            {recordToEdit && (
+                <AddOrUpdateRecordDialog
+                    isOpen={true}
+                    onClose={() => setRecordToEdit(null)}
+                    formDefinition={formDefinition}
+                    record={recordToEdit}
+                />
+            )}
+
             <AlertDialog
                 open={!!recordToDelete}
                 onOpenChange={() => setRecordToDelete(null)}

@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {
     Dialog,
@@ -11,36 +12,50 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useRecords } from '@/contexts/RecordsContext';
-import type { FormDefinition, FormRecordData } from '@/lib/types';
+import type { FormDefinition, FormRecordData, FormRecord } from '@/lib/types';
 import { DynamicFieldRenderer } from '../forms/DynamicFieldRenderer';
-import { log } from 'console';
 
-interface AddRecordDialogProps {
+interface AddOrUpdateRecordDialogProps {
     isOpen: boolean;
     onClose: () => void;
     formDefinition: FormDefinition;
+    record?: FormRecord | null;
 }
 
-export function AddRecordDialog({
+export function AddOrUpdateRecordDialog({
     isOpen,
     onClose,
     formDefinition,
-}: AddRecordDialogProps) {
-    const { addRecord } = useRecords();
+    record,
+}: AddOrUpdateRecordDialogProps) {
+    const { addRecord, updateRecord } = useRecords();
     const {
         handleSubmit,
         control,
         reset,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<FormRecordData>();
 
+    const isEditMode = !!record;
+
+    useEffect(() => {
+        if (isEditMode) {
+            reset(record.data);
+        } else {
+            reset({}); // Clear form for adding new record
+        }
+    }, [record, isEditMode, reset, isOpen]); // isOpen ensures reset on reopen
+
     const handleClose = () => {
-        reset();
         onClose();
     };
 
     const onSubmit = async (data: FormRecordData) => {
-        await addRecord(data);
+        if (isEditMode) {
+            await updateRecord({ ...record, data });
+        } else {
+            await addRecord(data);
+        }
         handleClose();
     };
 
@@ -48,7 +63,9 @@ export function AddRecordDialog({
         <Dialog open={isOpen} onOpenChange={handleClose}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Add New Record to {formDefinition.name}</DialogTitle>
+                    <DialogTitle>
+                        {isEditMode ? 'Edit Record in' : 'Add New Record to'} {formDefinition.name}
+                    </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     {formDefinition.fields.map((field) => (
@@ -62,7 +79,9 @@ export function AddRecordDialog({
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button type="submit">Save Record</Button>
+                        <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? 'Saving...' : isEditMode ? 'Save Changes' : 'Save Record'}
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

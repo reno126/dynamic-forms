@@ -8,7 +8,7 @@ import { ArrowLeft, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RecordsTable } from '@/components/records/RecordsTable';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { AddRecordDialog } from '@/components/records/AddRecordDialog';
+import { AddOrUpdateRecordDialog } from '@/components/records/AddOrUpdateRecordDialog';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -101,7 +101,7 @@ function RecordsListView({ formId }: { formId: string }) {
                     )}
                 </div>
             </div>
-            <AddRecordDialog
+            <AddOrUpdateRecordDialog
                 isOpen={isAddDialogOpen}
                 onClose={() => setAddDialogOpen(false)}
                 formDefinition={formDefinition}
