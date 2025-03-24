@@ -10,7 +10,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import type { FormDefinition, FormRecord } from '@/lib/types';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,18 +19,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal } from 'lucide-react';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { AddOrUpdateRecordDialog } from './AddOrUpdateRecordDialog';
 import { formatCell } from '@/lib/utils';
+import { useModal } from '@/contexts/ModalContext';
 
 interface RecordsTableProps {
     formDefinition: FormDefinition;
@@ -38,8 +28,19 @@ interface RecordsTableProps {
 
 export function RecordsTable({ formDefinition }: RecordsTableProps) {
     const { records, deleteRecord } = useRecords();
-    const [recordToEdit, setRecordToEdit] = useState<FormRecord | null>(null);
-    const [recordToDelete, setRecordToDelete] = useState<FormRecord | null>(null);
+    const { showModal } = useModal();
+
+    const handleEdit = (record: FormRecord) => {
+        showModal('addOrUpdateRecord', { formDefinition, record });
+    };
+
+    const handleDelete = (record: FormRecord) => {
+        showModal('confirm', {
+            title: 'Are you sure?',
+            description: 'This action cannot be undone. This will permanently delete the record.',
+            onConfirm: () => deleteRecord(record.id),
+        });
+    };
 
     const tableHeaders = useMemo(() => {
         return formDefinition.fields.map((field) => (
@@ -66,11 +67,11 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setRecordToEdit(record)}>
+                            <DropdownMenuItem onClick={() => handleEdit(record)}>
                                 Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => setRecordToDelete(record)}
+                                onClick={() => handleDelete(record)}
                                 className="text-red-600"
                             >
                                 Delete
@@ -82,71 +83,32 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
         ));
     }, [records, formDefinition.fields, deleteRecord]);
 
-    const handleDeleteConfirm = () => {
-        if (recordToDelete) {
-            deleteRecord(recordToDelete.id);
-            setRecordToDelete(null);
-        }
-    };
-
     return (
-        <>
-            <div className="overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                <Table>
-                    <TableHeader>
+        <div className="overflow-hidden border-b border-gray-200 sm:rounded-lg">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        {tableHeaders}
+                        <TableHead>
+                            <span className="sr-only">Actions</span>
+                        </TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {records && records.length > 0 ? (
+                        tableRows
+                    ) : (
                         <TableRow>
-                            {tableHeaders}
-                            <TableHead>
-                                <span className="sr-only">Actions</span>
-                            </TableHead>
+                            <TableCell
+                                colSpan={formDefinition.fields.length + 1}
+                                className="text-center"
+                            >
+                                No records yet.
+                            </TableCell>
                         </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {records && records.length > 0 ? (
-                            tableRows
-                        ) : (
-                            <TableRow>
-                                <TableCell
-                                    colSpan={formDefinition.fields.length + 1}
-                                    className="text-center"
-                                >
-                                    No records yet.
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
-
-            {recordToEdit && (
-                <AddOrUpdateRecordDialog
-                    isOpen={true}
-                    onClose={() => setRecordToEdit(null)}
-                    formDefinition={formDefinition}
-                    record={recordToEdit}
-                />
-            )}
-
-            <AlertDialog
-                open={!!recordToDelete}
-                onOpenChange={() => setRecordToDelete(null)}
-            >
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete the
-                            record.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDeleteConfirm}>
-                            Continue
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        </>
+                    )}
+                </TableBody>
+            </Table>
+        </div>
     );
 } 
