@@ -11,7 +11,7 @@ import {
     DialogClose,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useRecords } from '@/contexts/RecordsContext';
+import { useRecordActions } from '@/contexts/RecordsContext';
 import type { FormDefinition, FormRecordData, FormRecord } from '@/lib/types';
 import { DynamicFieldRenderer } from '../forms/DynamicFieldRenderer';
 
@@ -28,7 +28,7 @@ export function AddOrUpdateRecordDialog({
     formDefinition,
     record,
 }: AddOrUpdateRecordDialogProps) {
-    const { addRecord, updateRecord } = useRecords();
+    const { addRecord, updateRecord } = useRecordActions();
     const {
         handleSubmit,
         control,
@@ -54,7 +54,7 @@ export function AddOrUpdateRecordDialog({
         if (isEditMode) {
             await updateRecord({ ...record, data });
         } else {
-            await addRecord(data);
+            await addRecord(formDefinition.id, data);
         }
         handleClose();
     };

@@ -1,6 +1,7 @@
 'use client';
 
 import { useRecords } from '@/contexts/RecordsContext';
+import { useRecordActions } from '@/contexts/RecordsContext';
 import {
     Table,
     TableBody,
@@ -27,7 +28,8 @@ interface RecordsTableProps {
 }
 
 export function RecordsTable({ formDefinition }: RecordsTableProps) {
-    const { records, deleteRecord } = useRecords();
+    const { records } = useRecords();
+    const { deleteRecord } = useRecordActions();
     const { showModal } = useModal();
 
     const handleEdit = (record: FormRecord) => {

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { RecordsProvider, useRecords } from '@/contexts/RecordsContext';
+import { useRecordActions } from '@/contexts/RecordsContext';
 import { useFormDefinition } from '@/hooks/useFormDefinition';
 import Link from 'next/link';
 import { ArrowLeft, PlusIcon } from 'lucide-react';
@@ -19,7 +20,8 @@ interface RecordsListPageProps {
 function RecordsListView({ formId }: { formId: string }) {
     const { showModal } = useModal();
     const formDefinition = useFormDefinition(formId);
-    const { records, deleteAllRecords } = useRecords();
+    const { records } = useRecords();
+    const { deleteAllRecords } = useRecordActions();
 
     if (formDefinition === undefined || records === undefined) {
         return <div>Loading...</div>;
@@ -39,7 +41,7 @@ function RecordsListView({ formId }: { formId: string }) {
         showModal('confirm', {
             title: 'Are you absolutely sure?',
             description: 'This action cannot be undone. This will permanently delete all records for this form.',
-            onConfirm: deleteAllRecords,
+            onConfirm: () => deleteAllRecords(formId),
         });
     };
 

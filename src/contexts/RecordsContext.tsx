@@ -1,99 +1,98 @@
 'use client';
 
-import {
-    createContext,
-    useContext,
-    type ReactNode,
-    useCallback,
-} from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { nanoid } from 'nanoid';
 import { db } from '@/lib/db';
 import type { FormRecord, FormRecordData } from '@/lib/types';
+import { nanoid } from 'nanoid';
 
-type RecordsContextType = {
-    records: FormRecord[] | undefined;
-    addRecord: (data: FormRecordData) => Promise<void>;
+// --- 1. Context and Hook for Actions (Global) ---
+interface RecordActionsContextType {
+    addRecord: (formId: string, data: FormRecordData) => Promise<void>;
     updateRecord: (record: FormRecord) => Promise<void>;
     deleteRecord: (id: string) => Promise<void>;
-    deleteAllRecords: () => Promise<void>;
-};
+    deleteAllRecords: (formId: string) => Promise<void>;
+}
 
-const RecordsContext = createContext<RecordsContextType | undefined>(
-    undefined
-);
+const RecordActionsContext = createContext<RecordActionsContextType | null>(null);
 
-export function RecordsProvider({
-    children,
-    formId,
-}: {
-    children: ReactNode;
-    formId: string;
-}) {
-    const records = useLiveQuery(
-        () => db.formRecords.where('formId').equals(formId).sortBy('createdAt'),
-        [formId],
-        []
-    );
+export const RecordActionsProvider = ({ children }: { children: React.ReactNode }) => {
+    const addRecord = async (formId: string, data: FormRecordData) => {
+        const newRecord: FormRecord = {
+            id: nanoid(),
+            formId,
+            data,
+            createdAt: new Date(),
+        };
+        await db.formRecords.add(newRecord);
+    };
 
-    const addRecord = useCallback(
-        async (data: FormRecordData) => {
-            try {
-                const newRecord: FormRecord = {
-                    id: nanoid(),
-                    formId,
-                    data,
-                    createdAt: new Date(),
-                };
-                await db.formRecords.add(newRecord);
-            } catch (error) {
-                console.error('Failed to add record:', error);
-            }
-        },
-        [formId]
-    );
+    const updateRecord = async (record: FormRecord) => {
+        await db.formRecords.put(record);
+    };
 
-    const updateRecord = useCallback(async (record: FormRecord) => {
-        try {
-            await db.formRecords.put(record);
-        } catch (error) {
-            console.error('Failed to update record:', error);
-        }
-    }, []);
+    const deleteRecord = async (id: string) => {
+        await db.formRecords.delete(id);
+    };
 
-    const deleteRecord = useCallback(async (id: string) => {
-        try {
-            await db.formRecords.delete(id);
-        } catch (error) {
-            console.error('Failed to delete record:', error);
-        }
-    }, []);
+    const deleteAllRecords = async (formId: string) => {
+        await db.formRecords.where('formId').equals(formId).delete();
+    };
 
-    const deleteAllRecords = useCallback(async () => {
-        try {
-            await db.formRecords.where('formId').equals(formId).delete();
-        } catch (error) {
-            console.error('Failed to delete all records:', error);
-        }
-    }, [formId]);
-
-    const value = {
-        records,
+    const value = useMemo(() => ({
         addRecord,
         updateRecord,
         deleteRecord,
         deleteAllRecords,
-    };
+    }), []);
 
     return (
-        <RecordsContext.Provider value={value}>{children}</RecordsContext.Provider>
+        <RecordActionsContext.Provider value={value}>
+            {children}
+        </RecordActionsContext.Provider>
     );
+};
+
+export const useRecordActions = () => {
+    const context = useContext(RecordActionsContext);
+    if (!context) {
+        throw new Error('useRecordActions must be used within a RecordActionsProvider');
+    }
+    return context;
+};
+
+// --- 2. Context and Hook for Data (Scoped per form) ---
+interface RecordsContextType {
+    records: FormRecord[] | undefined;
 }
 
-export function useRecords() {
+const RecordsContext = createContext<RecordsContextType | null>(null);
+
+export const RecordsProvider = ({
+    formId,
+    children,
+}: {
+    formId: string;
+    children: React.ReactNode;
+}) => {
+    const records = useLiveQuery(
+        () => db.formRecords.where('formId').equals(formId).sortBy('createdAt'),
+        [formId]
+    );
+
+    const value = useMemo(() => ({ records }), [records]);
+
+    return (
+        <RecordsContext.Provider value={value}>
+            {children}
+        </RecordsContext.Provider>
+    );
+};
+
+export const useRecords = () => {
     const context = useContext(RecordsContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error('useRecords must be used within a RecordsProvider');
     }
     return context;
-} 
+}; 
