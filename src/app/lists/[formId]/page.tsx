@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { RecordsTable } from '@/components/records/RecordsTable';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useModal } from '@/contexts/ModalContext';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 interface RecordsListPageProps {
     params: Promise<{
@@ -45,6 +46,20 @@ function RecordsListView({ formId }: { formId: string }) {
         });
     };
 
+    const action = (
+        <div className="flex space-x-2">
+            {hasRecords && (
+                <Button variant="destructive" onClick={handleDeleteAll}>
+                    Delete All Records
+                </Button>
+            )}
+            <Button onClick={handleAddRecord}>
+                <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+                Add New Record
+            </Button>
+        </div>
+    );
+
     return (
         <div className="space-y-6">
             <div>
@@ -56,30 +71,11 @@ function RecordsListView({ formId }: { formId: string }) {
                     Back to all lists
                 </Link>
             </div>
-            <div className="sm:flex sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="text-2xl font-semibold text-gray-900">
-                        {formDefinition.name}
-                    </h1>
-                    <p className="mt-2 text-sm text-gray-700">
-                        A list of all records submitted to this form.
-                    </p>
-                </div>
-                <div className="mt-4 flex space-x-2 sm:ml-16 sm:mt-0">
-                    {hasRecords && (
-                        <Button
-                            variant="destructive"
-                            onClick={handleDeleteAll}
-                        >
-                            Delete All Records
-                        </Button>
-                    )}
-                    <Button onClick={handleAddRecord}>
-                        <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-                        Add New Record
-                    </Button>
-                </div>
-            </div>
+            <PageHeader
+                title={formDefinition.name}
+                description="A list of all records submitted to this form."
+                action={action}
+            />
 
             <div className="mt-8">
                 {hasRecords ? (

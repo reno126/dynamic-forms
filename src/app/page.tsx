@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { FileText, ListChecks } from 'lucide-react';
+import { PageHeader } from '@/components/layout/PageHeader';
 
 interface CustomCardProps {
   title: string;
@@ -56,8 +57,8 @@ export default function DashboardPage() {
   ], [totalForms, totalRecords]);
 
   return (
-    <div>
-      <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+    <div className="space-y-6">
+      <PageHeader title="Dashboard" />
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         {dashboardCards.map((card) => (
           <DashboardCard
