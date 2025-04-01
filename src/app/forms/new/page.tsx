@@ -12,6 +12,8 @@ import { CreateFormValues, FormBuilderField } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { nanoid } from 'nanoid';
 import { FormFieldBuilder } from '@/components/forms/FormFieldBuilder';
+import { PageWrapper } from '@/components/layout/PageWrapper';
+import { BackLinkButton } from '@/components/ui/BackLinkButton';
 
 export default function CreateFormPage() {
     const router = useRouter();
@@ -41,75 +43,72 @@ export default function CreateFormPage() {
     };
 
     return (
-        <div className="space-y-6">
-            <div>
-                <Link
-                    href="/forms"
-                    className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
-                >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to all forms
-                </Link>
-            </div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Create New Form</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        <div className="space-y-2">
-                            <Label htmlFor="name">Form Name</Label>
-                            <Input
-                                id="name"
-                                {...register('name', { required: 'Form name is required' })}
-                            />
-                            {errors.name && (
-                                <p className="text-sm text-red-500">{errors.name.message}</p>
-                            )}
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Description</Label>
-                            <Input id="description" {...register('description')} />
-                        </div>
-
-                        <div className="space-y-2">
-                            <Label>Fields</Label>
-                            {fields.map((field, index) => (
-                                <FormFieldBuilder
-                                    key={field.id}
-                                    index={index}
-                                    control={control}
-                                    register={register}
-                                    remove={() => remove(index)}
-                                    errors={errors}
+        <PageWrapper>
+            <BackLinkButton href="/forms" text="Back to all forms" />
+            <div className="mx-auto max-w-4xl">
+                <div className="space-y-2">
+                    <h1 className="text-3xl font-bold">Create a New Form</h1>
+                </div>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Create New Form</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            <div className="space-y-2">
+                                <Label htmlFor="name">Form Name</Label>
+                                <Input
+                                    id="name"
+                                    {...register('name', { required: 'Form name is required' })}
                                 />
-                            ))}
-                        </div>
+                                {errors.name && (
+                                    <p className="text-sm text-red-500">{errors.name.message}</p>
+                                )}
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="description">Description</Label>
+                                <Input id="description" {...register('description')} />
+                            </div>
 
+                            <div className="space-y-2">
+                                <Label>Fields</Label>
+                                {fields.map((field, index) => (
+                                    <FormFieldBuilder
+                                        key={field.id}
+                                        index={index}
+                                        control={control}
+                                        register={register}
+                                        remove={() => remove(index)}
+                                        errors={errors}
+                                    />
+                                ))}
+                            </div>
+
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => append(emptyDefaultField)}
+                            >
+                                <PlusIcon className="mr-2 h-4 w-4" />
+                                Add Field
+                            </Button>
+                        </CardContent>
+                    </Card>
+                    <div className="mt-6 flex justify-end space-x-2">
                         <Button
                             type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => append(emptyDefaultField)}
+                            variant="ghost"
+                            onClick={() => router.push('/forms')}
                         >
-                            <PlusIcon className="mr-2 h-4 w-4" />
-                            Add Field
+                            Cancel
                         </Button>
-                    </CardContent>
-                </Card>
-                <div className="mt-6 flex justify-end space-x-2">
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => router.push('/forms')}
-                    >
-                        Cancel
-                    </Button>
-                    <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? 'Creating...' : 'Create Form'}
-                    </Button>
-                </div>
-            </form>
-        </div>
+                        <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? 'Creating...' : 'Create Form'}
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </PageWrapper>
     );
 } 

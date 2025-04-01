@@ -11,6 +11,10 @@ import { RecordsTable } from '@/components/records/RecordsTable';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useModal } from '@/contexts/ModalContext';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
+import { BackLinkButton } from '@/components/ui/BackLinkButton';
+import { PageWrapper } from '@/components/layout/PageWrapper';
+import { AddOrUpdateRecordDialog } from '@/components/records/AddOrUpdateRecordDialog';
 
 interface RecordsListPageProps {
     params: Promise<{
@@ -29,7 +33,12 @@ function RecordsListView({ formId }: { formId: string }) {
     }
 
     if (formDefinition === null) {
-        return <div>Form not found.</div>;
+        return (
+            <PageWrapper>
+                <BackLinkButton href="/lists" text="Back to all lists" />
+                <p>Form not found.</p>
+            </PageWrapper>
+        );
     }
 
     const hasRecords = records && records.length > 0;
@@ -61,19 +70,11 @@ function RecordsListView({ formId }: { formId: string }) {
     );
 
     return (
-        <div className="space-y-6">
-            <div>
-                <Link
-                    href="/lists"
-                    className="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
-                >
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to all lists
-                </Link>
-            </div>
+        <PageWrapper>
+            <BackLinkButton href="/lists" text="Back to all lists" />
             <PageHeader
                 title={formDefinition.name}
-                description="A list of all records submitted to this form."
+                description={formDefinition.description || 'Manage and view the records for this form.'}
                 action={action}
             />
 
@@ -93,7 +94,7 @@ function RecordsListView({ formId }: { formId: string }) {
                     />
                 )}
             </div>
-        </div>
+        </PageWrapper>
     );
 }
 
