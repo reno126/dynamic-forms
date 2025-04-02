@@ -33,7 +33,7 @@ export function AddOrUpdateRecordDialog({
         handleSubmit,
         control,
         reset,
-        formState: { errors, isSubmitting },
+        formState: { isSubmitting },
     } = useForm<FormRecordData>();
 
     const isEditMode = !!record;
@@ -70,7 +70,7 @@ export function AddOrUpdateRecordDialog({
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     {formDefinition.fields.map((field) => (
                         <div key={field.id}>
-                            <DynamicFieldRenderer field={field} control={control} errors={errors} />
+                            <DynamicFieldRenderer field={field} control={control} />
                         </div>
                     ))}
                     <DialogFooter>
