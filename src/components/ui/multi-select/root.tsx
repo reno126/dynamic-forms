@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, PropsWithChildren, useState } from "react";
+import { useMemo, PropsWithChildren, useState, useCallback } from "react";
 import { Popover } from "@/components/ui/popover";
 import { MultiSelectContext } from "./context";
 
@@ -20,7 +20,7 @@ export const MultiSelect = ({
 }: MultiSelectProps) => {
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
-    const toggleOption = (val: string) => {
+    const toggleOption = useCallback((val: string) => {
         const newSelectedValues = value.includes(val)
             ? value.filter((v) => v !== val)
             : [...value, val];
@@ -28,7 +28,7 @@ export const MultiSelect = ({
         if (onValueChange) {
             onValueChange(newSelectedValues);
         }
-    };
+    }, [value, onValueChange]);
 
     const contextValue = useMemo(() => ({
         options,

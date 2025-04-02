@@ -3,9 +3,8 @@
 import {
     createContext,
     useContext,
-    type ReactNode,
-    useCallback,
     useMemo,
+    useCallback
 } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { nanoid } from 'nanoid';
@@ -31,7 +30,7 @@ export const FormDefinitionsProvider = ({
 }) => {
     const formDefinitions = useLiveQuery(() => db.formDefinitions.toArray(), []);
 
-    const addForm = async (form: CreateFormValues) => {
+    const addForm = useCallback(async (form: CreateFormValues) => {
         const newId = nanoid();
         const newForm: FormDefinition = {
             ...form,
@@ -44,24 +43,21 @@ export const FormDefinitionsProvider = ({
             })),
         };
         await db.formDefinitions.add(newForm);
-    };
+    }, []);
 
-    const getFormDefinition = (id: string) => {
+    const getFormDefinition = useCallback((id: string) => {
         return formDefinitions?.find((form) => form.id === id);
-    };
+    }, [formDefinitions]);
 
-    const deleteForm = async (id: string) => {
+    const deleteForm = useCallback(async (id: string) => {
         await db.formDefinitions.delete(id);
-        // delete associated records
         await db.formRecords.where('formId').equals(id).delete();
-    };
+    }, []);
 
-    const deleteAllData = async () => {
-        // This will delete the entire database and all its data.
+    const deleteAllData = useCallback(async () => {
         await db.delete();
-        // Re-open the database to re-create it.
         await db.open();
-    };
+    }, []);
 
     const value = useMemo(
         () => ({
@@ -71,7 +67,7 @@ export const FormDefinitionsProvider = ({
             deleteForm,
             deleteAllData,
         }),
-        [formDefinitions]
+        [formDefinitions, addForm, getFormDefinition, deleteForm, deleteAllData]
     );
 
     return (

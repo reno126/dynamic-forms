@@ -2,11 +2,10 @@
 
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { PlusIcon, ArrowLeft } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { useFormDefinitions } from '@/contexts/FormDefinitionsContext';
 import { CreateFormValues, FormBuilderField } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

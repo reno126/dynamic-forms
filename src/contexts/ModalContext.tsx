@@ -5,7 +5,6 @@ import { AddOrUpdateRecordDialog } from '@/components/records/AddOrUpdateRecordD
 import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
 import { FormDefinition, FormRecord } from '@/lib/types';
 
-// 1. Define the props for each modal. This is the single source of truth.
 type ModalProps = {
     addOrUpdateRecord: {
         formDefinition: FormDefinition;
@@ -18,16 +17,17 @@ type ModalProps = {
     };
 };
 
-// 2. Define modal types based on the keys of ModalProps
 export type ModalType = keyof ModalProps;
 
-// Define the shape of the modal state
 type ModalState<T extends ModalType> = {
     type: T;
     props: ModalProps[T];
 };
 
-// 3. Define the context value
+type AnyModalState = {
+    [K in ModalType]: ModalState<K>;
+}[ModalType];
+
 interface ModalContextType {
     showModal: <T extends ModalType>(type: T, props: ModalProps[T]) => void;
     hideModal: () => void;
@@ -35,17 +35,11 @@ interface ModalContextType {
 
 const ModalContext = createContext<ModalContextType | null>(null);
 
-// 4. Map modal types to their actual React components
-const modalComponents: { [K in ModalType]: React.ComponentType<any> } = {
-    addOrUpdateRecord: AddOrUpdateRecordDialog,
-    confirm: ConfirmDialog,
-};
-
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
-    const [modal, setModal] = useState<ModalState<any> | null>(null);
+    const [modal, setModal] = useState<AnyModalState | null>(null);
 
     const showModal = <T extends ModalType>(type: T, props: ModalProps[T]) => {
-        setModal({ type, props });
+        setModal({ type, props } as AnyModalState);
     };
 
     const hideModal = () => {
@@ -58,12 +52,16 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
         if (!modal) {
             return null;
         }
-        const modalType: ModalType = modal.type;
-        const ModalComponent = modalComponents[modalType];
-        if (!ModalComponent) {
-            return null;
+
+        if (modal.type === 'addOrUpdateRecord') {
+            return <AddOrUpdateRecordDialog isOpen onClose={hideModal} {...modal.props} />;
         }
-        return <ModalComponent isOpen={true} onClose={hideModal} {...modal.props} />;
+
+        if (modal.type === 'confirm') {
+            return <ConfirmDialog isOpen onClose={hideModal} {...modal.props} />;
+        }
+
+        return null;
     };
 
     return (

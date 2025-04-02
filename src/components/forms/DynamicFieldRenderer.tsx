@@ -1,6 +1,6 @@
 'use client';
 
-import { Control, FieldErrors } from 'react-hook-form';
+import { Control, ControllerRenderProps } from 'react-hook-form';
 import { FormField, FormRecordData } from '@/lib/types';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -26,7 +26,7 @@ export function DynamicFieldRenderer({ field, control }: DynamicFieldRendererPro
         return '';
     };
 
-    const renderField = (controllerField: any) => {
+    const renderField = (controllerField: ControllerRenderProps<FormRecordData, keyof FormRecordData>) => {
         switch (field.type) {
             case 'text':
                 return <Input id={field.name} {...controllerField} value={(controllerField.value as string) || ''} />;

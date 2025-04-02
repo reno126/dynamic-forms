@@ -4,17 +4,14 @@ import React from 'react';
 import { RecordsProvider, useRecords } from '@/contexts/RecordsContext';
 import { useRecordActions } from '@/contexts/RecordsContext';
 import { useFormDefinition } from '@/hooks/useFormDefinition';
-import Link from 'next/link';
-import { ArrowLeft, PlusIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { RecordsTable } from '@/components/records/RecordsTable';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useModal } from '@/contexts/ModalContext';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { ConfirmDialog } from '@/components/modals/ConfirmDialog';
 import { BackLinkButton } from '@/components/ui/BackLinkButton';
 import { PageWrapper } from '@/components/layout/PageWrapper';
-import { AddOrUpdateRecordDialog } from '@/components/records/AddOrUpdateRecordDialog';
 
 interface RecordsListPageProps {
     params: Promise<{

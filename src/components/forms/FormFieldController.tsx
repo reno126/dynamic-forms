@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Control, Controller, FieldValues, Path, ControllerRenderProps } from 'react-hook-form';
+import { Control, Controller, FieldValues, Path, ControllerRenderProps, PathValue } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
 
 interface FormFieldControllerProps<TFieldValues extends FieldValues> {
@@ -10,7 +10,7 @@ interface FormFieldControllerProps<TFieldValues extends FieldValues> {
     label: string;
     required?: boolean;
     rules?: object;
-    defaultValue?: any;
+    defaultValue?: PathValue<TFieldValues, Path<TFieldValues>>;
     children: (field: ControllerRenderProps<TFieldValues, Path<TFieldValues>>) => React.ReactNode;
     className?: string;
 }

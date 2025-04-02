@@ -11,7 +11,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import type { FormDefinition, FormRecord } from '@/lib/types';
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -32,17 +32,17 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
     const { deleteRecord } = useRecordActions();
     const { showModal } = useModal();
 
-    const handleEdit = (record: FormRecord) => {
+    const handleEdit = useCallback((record: FormRecord) => {
         showModal('addOrUpdateRecord', { formDefinition, record });
-    };
+    }, [showModal, formDefinition]);
 
-    const handleDelete = (record: FormRecord) => {
+    const handleDelete = useCallback((record: FormRecord) => {
         showModal('confirm', {
             title: 'Are you sure?',
             description: 'This action cannot be undone. This will permanently delete the record.',
             onConfirm: () => deleteRecord(record.id),
         });
-    };
+    }, [showModal, deleteRecord]);
 
     const tableHeaders = useMemo(() => {
         return formDefinition.fields.map((field) => (
@@ -83,7 +83,7 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
                 </TableCell>
             </TableRow>
         ));
-    }, [records, formDefinition.fields, deleteRecord]);
+    }, [records, formDefinition.fields, handleEdit, handleDelete]);
 
     return (
         <div className="overflow-hidden border-b border-gray-200 sm:rounded-lg">
