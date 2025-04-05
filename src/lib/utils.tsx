@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatCell(
-    data: FormRecordData[string],
+    data: FormRecordData[string] | undefined,
     field: FormDefinition['fields'][0]
 ): React.ReactNode {
     if (field.isMultiSelect && Array.isArray(data)) {
