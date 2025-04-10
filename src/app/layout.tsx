@@ -1,12 +1,10 @@
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { FormDefinitionsProvider } from '@/contexts/FormDefinitionsContext';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { PageWrapper } from '@/components/layout/PageWrapper';
-import { Header } from '@/components/layout/Header';
 import { cn } from '@/lib/utils';
 import { ModalProvider } from '@/contexts/ModalContext';
 import { RecordActionsProvider } from '@/contexts/RecordsContext';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -31,13 +29,7 @@ export default function RootLayout({
         <FormDefinitionsProvider>
           <RecordActionsProvider>
             <ModalProvider>
-              <div className="flex h-full">
-                <Sidebar />
-                <div className="flex min-w-0 flex-1 flex-col">
-                  <Header />
-                  <PageWrapper>{children}</PageWrapper>
-                </div>
-              </div>
+              <MainLayout>{children}</MainLayout>
             </ModalProvider>
           </RecordActionsProvider>
         </FormDefinitionsProvider>

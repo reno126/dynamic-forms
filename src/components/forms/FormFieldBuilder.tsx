@@ -29,7 +29,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
 
     return (
         <div className="rounded-md border bg-gray-50 p-4">
-            <div className="flex items-start space-x-2">
+            <div className="flex flex-col md:flex-row md:items-start md:space-x-2 space-y-4 md:space-y-0">
                 <div className="flex-1 space-y-1">
                     <Label htmlFor={`fields.${index}.label`} className="sr-only">
                         Label
@@ -44,52 +44,54 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                         <p className="text-sm text-red-500">{errors.fields[index]?.label?.message}</p>
                     )}
                 </div>
-                <div className="flex-shrink-0">
-                    <Controller
-                        control={control}
-                        name={`fields.${index}.type`}
-                        render={({ field: controllerField }) => (
-                            <Select
-                                onValueChange={controllerField.onChange}
-                                value={controllerField.value}
-                            >
-                                <SelectTrigger className="w-[120px]">
-                                    <SelectValue placeholder="Type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {FORM_FIELD_TYPES.map((type) => (
-                                        <SelectItem key={type} value={type}>
-                                            {type}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        )}
-                    />
+                <div className="flex items-center space-x-2">
+                    <div className="flex-shrink-0">
+                        <Controller
+                            control={control}
+                            name={`fields.${index}.type`}
+                            render={({ field: controllerField }) => (
+                                <Select
+                                    onValueChange={controllerField.onChange}
+                                    value={controllerField.value}
+                                >
+                                    <SelectTrigger className="w-[120px]">
+                                        <SelectValue placeholder="Type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {FORM_FIELD_TYPES.map((type) => (
+                                            <SelectItem key={type} value={type}>
+                                                {type}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                    </div>
+                    <div className="flex h-10 items-center space-x-2">
+                        <Controller
+                            control={control}
+                            name={`fields.${index}.isRequired`}
+                            render={({ field }) => (
+                                <Checkbox
+                                    id={`fields.${index}.isRequired`}
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                            )}
+                        />
+                        <Label htmlFor={`fields.${index}.isRequired`}>Required</Label>
+                    </div>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => remove(index)}
+                        className="flex-shrink-0"
+                    >
+                        <TrashIcon className="h-4 w-4" />
+                    </Button>
                 </div>
-                <div className="flex h-10 items-center space-x-2 self-end">
-                    <Controller
-                        control={control}
-                        name={`fields.${index}.isRequired`}
-                        render={({ field }) => (
-                            <Checkbox
-                                id={`fields.${index}.isRequired`}
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                            />
-                        )}
-                    />
-                    <Label htmlFor={`fields.${index}.isRequired`}>Required</Label>
-                </div>
-                <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => remove(index)}
-                    className="flex-shrink-0 mt-auto"
-                >
-                    <TrashIcon className="h-4 w-4" />
-                </Button>
             </div>
             {isSelect && (
                 <div className="mt-4 space-y-4">
