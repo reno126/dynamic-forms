@@ -6,10 +6,11 @@ import {
     MultiSelectTrigger,
     MultiSelectContent,
 } from '@/components/ui/multi-select';
+import { FORM_FIELD_TYPES } from '@/constants/forms';
 
-jest.mock('@/components/ui/popover', () => ({
+jest.mock('@/lib/ui/popover', () => ({
     Popover: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    PopoverTrigger: ({ children }: { children: React.ReactNode }) => children,
+    PopoverTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     PopoverContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 

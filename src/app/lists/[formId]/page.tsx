@@ -5,7 +5,7 @@ import { RecordsProvider, useRecords } from '@/contexts/RecordsContext';
 import { useRecordActions } from '@/contexts/RecordsContext';
 import { useFormDefinition } from '@/hooks/useFormDefinition';
 import { PlusIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/lib/ui/button';
 import { RecordsTable } from '@/components/records/RecordsTable';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useModal } from '@/contexts/ModalContext';

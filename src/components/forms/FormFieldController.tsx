@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Control, Controller, FieldValues, Path, ControllerRenderProps, PathValue } from 'react-hook-form';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/lib/ui/label';
 
 interface FormFieldControllerProps<TFieldValues extends FieldValues> {
     control: Control<TFieldValues>;

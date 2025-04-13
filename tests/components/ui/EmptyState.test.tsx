@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/lib/ui/button';
 
 // Mock the illustration component to avoid testing its implementation details
 jest.mock('@/components/illustrations/EmptyBoxIllustration', () => ({

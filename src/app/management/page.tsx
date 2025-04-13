@@ -1,8 +1,9 @@
 'use client';
 
 import { useFormDefinitions } from '@/contexts/FormDefinitionsContext';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Button } from '@/lib/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/lib/ui/card';
 import { useModal } from '@/contexts/ModalContext';
 
 export default function ManagementPage() {

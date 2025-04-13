@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, FileText, List, Settings, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
+import { Button } from '@/lib/ui/button';
 
 const navItems = [
     { href: '/', label: 'Dashboard', icon: LayoutDashboard },

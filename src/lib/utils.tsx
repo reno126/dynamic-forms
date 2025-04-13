@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import type { FormDefinition, FormRecordData } from './types';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/lib/ui/badge';
 import React from 'react';
 
 export function cn(...inputs: ClassValue[]) {

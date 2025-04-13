@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, PropsWithChildren, useState, useCallback } from "react";
-import { Popover } from "@/components/ui/popover";
+import * as React from 'react';
+import { Popover } from '@/lib/ui/popover';
 import { MultiSelectContext } from "./context";
 
 type MultiSelectProps = PropsWithChildren<{

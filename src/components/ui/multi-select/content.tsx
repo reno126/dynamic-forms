@@ -7,7 +7,7 @@ import {
 } from "react";
 import { CheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PopoverContent } from "@/components/ui/popover";
+import { PopoverContent } from "@/lib/ui/popover";
 import {
     Command,
     CommandEmpty,
@@ -15,7 +15,7 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
-} from "@/components/ui/command";
+} from "@/lib/ui/command";
 import { useMultiSelect } from "./context";
 
 type MultiSelectContentProps = ComponentPropsWithoutRef<typeof PopoverContent>;

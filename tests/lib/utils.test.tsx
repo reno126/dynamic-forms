@@ -4,8 +4,12 @@ import { formatCell } from '../../src/lib/utils';
 import type { FormField } from '../../src/lib/types';
 
 // Mock the Badge component to simplify testing its presence
-jest.mock('@/components/ui/badge', () => ({
-    Badge: ({ children }: { children: React.ReactNode }) => <div data-testid="badge">{children}</div>,
+jest.mock('next/navigation', () => ({
+    usePathname: jest.fn(),
+}));
+
+jest.mock('@/lib/ui/badge', () => ({
+    Badge: ({ children, ...props }: { children: React.ReactNode }) => <div {...props}>{children}</div>
 }));
 
 describe('formatCell', () => {

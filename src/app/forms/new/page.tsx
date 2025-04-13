@@ -2,13 +2,13 @@
 
 import { useForm, useFieldArray } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/lib/ui/button';
+import { Input } from '@/lib/ui/input';
+import { Label } from '@/lib/ui/label';
 import { PlusIcon } from 'lucide-react';
 import { useFormDefinitions } from '@/contexts/FormDefinitionsContext';
 import { CreateFormValues, FormBuilderField } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/lib/ui/card';
 import { nanoid } from 'nanoid';
 import { FormFieldBuilder } from '@/components/forms/FormFieldBuilder';
 import { PageWrapper } from '@/components/layout/PageWrapper';

@@ -8,8 +8,8 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+} from '@/lib/ui/table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/lib/ui/card';
 import type { FormDefinition, FormRecord } from '@/lib/types';
 import { useMemo, useCallback } from 'react';
 import {
@@ -17,8 +17,8 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from '@/lib/ui/dropdown-menu';
+import { Button } from '@/lib/ui/button';
 import { MoreHorizontal } from 'lucide-react';
 import { formatCell } from '@/lib/utils';
 import { useModal } from '@/contexts/ModalContext';

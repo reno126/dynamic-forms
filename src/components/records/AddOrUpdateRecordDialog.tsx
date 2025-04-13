@@ -9,8 +9,8 @@ import {
     DialogTitle,
     DialogFooter,
     DialogClose,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@/lib/ui/dialog';
+import { Button } from '@/lib/ui/button';
 import { useRecordActions } from '@/contexts/RecordsContext';
 import type { FormDefinition, FormRecordData, FormRecord } from '@/lib/types';
 import { DynamicFieldRenderer } from '../forms/DynamicFieldRenderer';

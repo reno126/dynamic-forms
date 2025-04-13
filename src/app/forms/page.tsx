@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useFormDefinitions } from '@/contexts/FormDefinitionsContext';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/lib/ui/button';
 import { PlusIcon } from 'lucide-react';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { FormList } from '@/components/forms/FormList';

@@ -6,10 +6,11 @@ import { useTotalRecordCount } from '@/hooks/useTotalRecordCount';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { FileText, ListChecks } from 'lucide-react';
+} from '@/lib/ui/card';
+import { LayoutDashboard, FileText, List, Settings } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
 
 interface CustomCardProps {
@@ -52,7 +53,7 @@ export default function DashboardPage() {
       title: 'Total Records',
       value: totalRecords,
       description: 'Total number of records submitted across all forms',
-      icon: ListChecks
+      icon: List
     }
   ], [totalForms, totalRecords]);
 

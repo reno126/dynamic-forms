@@ -2,11 +2,13 @@
 
 import { forwardRef, ComponentPropsWithoutRef } from "react";
 import { ChevronDown, XCircle } from "lucide-react";
+import * as React from 'react';
+import { X as RemoveIcon } from 'lucide-react';
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/lib/ui/button";
+import { Badge } from "@/lib/ui/badge";
+import { PopoverTrigger } from "@/lib/ui/popover";
 import { useMultiSelect } from "./context";
 
 type MultiSelectTriggerProps = ComponentPropsWithoutRef<typeof Button>;

@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/lib/ui/button';
 import { PageWrapper } from '@/components/layout/PageWrapper';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/lib/ui/card';
 
 export default function GlobalError({
     error,

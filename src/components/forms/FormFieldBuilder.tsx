@@ -1,11 +1,11 @@
 'use client';
 
 import { Control, Controller, FieldErrors, UseFormRegister, useWatch } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/lib/ui/button";
+import { Input } from "@/lib/ui/input";
+import { Label } from "@/lib/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/lib/ui/select";
+import { Checkbox } from "@/lib/ui/checkbox";
 import { CreateFormValues } from "@/lib/types";
 import { FORM_FIELD_TYPES } from "@/constants/forms";
 import { TrashIcon } from "lucide-react";

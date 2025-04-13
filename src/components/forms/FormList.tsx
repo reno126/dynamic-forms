@@ -8,7 +8,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@/components/ui/table';
+} from '@/lib/ui/table';
 import { useFormDefinitions } from '@/contexts/FormDefinitionsContext';
 import type { FormDefinition } from '@/lib/types';
 

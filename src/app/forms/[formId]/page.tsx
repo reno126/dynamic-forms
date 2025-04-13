@@ -8,8 +8,8 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from '@/lib/ui/card';
+import { Badge } from '@/lib/ui/badge';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { BackLinkButton } from '@/components/ui/BackLinkButton';
 

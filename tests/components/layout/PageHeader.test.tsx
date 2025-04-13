@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { Button } from '@/lib/ui/button';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Button } from '@/components/ui/button';
+import { BackLinkButton } from '@/components/ui/BackLinkButton';
 
 describe('PageHeader', () => {
     it('should render the title', () => {
