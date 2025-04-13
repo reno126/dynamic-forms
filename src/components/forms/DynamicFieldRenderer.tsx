@@ -4,7 +4,7 @@ import { Control, ControllerRenderProps } from 'react-hook-form';
 import { FormField, FormRecordData } from '@/lib/types';
 import { Input } from '@/lib/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/lib/ui/select';
-import { MultiSelect, MultiSelectTrigger, MultiSelectContent } from '@/components/ui/multi-select';
+import { MultiSelect, MultiSelectTrigger, MultiSelectContent } from '@/components/ui/MultiSelect';
 import { FormFieldController } from './FormFieldController';
 import { CheckboxFieldController } from './CheckboxFieldController';
 

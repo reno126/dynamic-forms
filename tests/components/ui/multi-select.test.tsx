@@ -5,7 +5,7 @@ import {
     MultiSelect,
     MultiSelectTrigger,
     MultiSelectContent,
-} from '@/components/ui/multi-select';
+} from '@/components/ui/MultiSelect';
 import { FORM_FIELD_TYPES } from '@/constants/forms';
 
 jest.mock('@/lib/ui/popover', () => ({

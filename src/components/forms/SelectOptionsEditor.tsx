@@ -2,9 +2,9 @@
 
 import { Control, FieldErrors, UseFormRegister, useFieldArray } from "react-hook-form";
 import { CreateFormValues } from "@/lib/types";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/lib/ui/button";
+import { Input } from "@/lib/ui/input";
+import { Label } from "@/lib/ui/label";
 import { PlusIcon, TrashIcon } from "lucide-react";
 
 type SelectOptionsEditorProps = {
