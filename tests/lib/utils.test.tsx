@@ -1,27 +1,25 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { formatCell } from '../../src/lib/utils';
-import type { FormField } from '../../src/lib/types';
+import { formatCell } from '@/lib/utils';
+import { FormField } from '@/lib/types';
 
-// Mock the Badge component to simplify testing its presence
-jest.mock('next/navigation', () => ({
-    usePathname: jest.fn(),
-}));
-
+// Mock the Badge component to ensure it has a test id
 jest.mock('@/lib/ui/badge', () => ({
-    Badge: ({ children, ...props }: { children: React.ReactNode }) => <div {...props}>{children}</div>
+    Badge: ({ children, ...props }: { children: React.ReactNode }) => (
+        <div data-testid="badge" {...props}>
+            {children}
+        </div>
+    ),
 }));
 
 describe('formatCell', () => {
     it('should format a Date object to a locale date string', () => {
-        const date = new Date(2023, 10, 25);
+        const date = new Date(2023, 10, 25); // Month is 0-indexed, so 10 is November
         const field = { type: 'date' } as FormField;
-        const formatted = formatCell(date, field);
-        expect(typeof formatted).toBe('string');
-        expect(formatted).toBe(date.toLocaleDateString());
+        expect(formatCell(date, field)).toBe(date.toLocaleDateString());
     });
 
-    it('should return "Yes" for true and "No" for false', () => {
+    it('should return "Yes" for true and "No" for false boolean values', () => {
         const field = { type: 'checkbox' } as FormField;
         expect(formatCell(true, field)).toBe('Yes');
         expect(formatCell(false, field)).toBe('No');
