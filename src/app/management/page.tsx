@@ -1,7 +1,7 @@
 'use client';
 
+import React from 'react';
 import { useFormDefinitions } from '@/contexts/FormDefinitionsContext';
-import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/lib/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/lib/ui/card';
 import { useModal } from '@/contexts/ModalContext';
@@ -22,9 +22,9 @@ export default function ManagementPage() {
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-2xl font-semibold text-gray-900">Management</h1>
-                <p className="mt-2 text-sm text-gray-700">
-                    High-risk operations. Please be careful.
+                <h1 className="text-2xl font-bold">Management</h1>
+                <p className="text-muted-foreground">
+                    This is the management page.
                 </p>
             </div>
             <Card className="border-red-500">

@@ -3,7 +3,6 @@
 import { forwardRef, ComponentPropsWithoutRef } from "react";
 import { ChevronDown, XCircle } from "lucide-react";
 import * as React from 'react';
-import { X as RemoveIcon } from 'lucide-react';
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/lib/ui/button";

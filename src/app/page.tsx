@@ -6,11 +6,10 @@ import { useTotalRecordCount } from '@/hooks/useTotalRecordCount';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/lib/ui/card';
-import { LayoutDashboard, FileText, List, Settings } from 'lucide-react';
+import { FileText, List } from 'lucide-react';
 import { PageHeader } from '@/components/layout/PageHeader';
 
 interface CustomCardProps {

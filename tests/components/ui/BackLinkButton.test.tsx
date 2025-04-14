@@ -4,20 +4,16 @@ import { BackLinkButton } from '@/components/ui/BackLinkButton';
 
 describe('BackLinkButton', () => {
     it('should render a link with the correct href and text', () => {
-        const href = '/test-path';
+        // Arrange
+        const href = '/previous-page';
         const text = 'Go Back';
 
+        // Act
         render(<BackLinkButton href={href} text={text} />);
 
-        const linkElement = screen.getByRole('link');
-
-        expect(linkElement).toBeInTheDocument();
-        expect(linkElement).toHaveAttribute('href', href);
-        expect(linkElement).toHaveTextContent(text);
-    });
-
-    it('should render the back arrow icon', () => {
-        render(<BackLinkButton href="/" text="Back" />);
-        expect(screen.getByText('Back')).toBeInTheDocument();
+        // Assert
+        const link = screen.getByRole('link', { name: /Go Back/i });
+        expect(link).toBeInTheDocument();
+        expect(link).toHaveAttribute('href', href);
     });
 }); 

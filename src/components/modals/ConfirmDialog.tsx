@@ -2,13 +2,7 @@
 
 import React from 'react';
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-    DialogClose,
+
 } from '@/lib/ui/dialog';
 import {
     AlertDialog,
@@ -20,8 +14,6 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/lib/ui/alert-dialog';
-import { Button } from '@/lib/ui/button';
-import { useModal } from '@/contexts/ModalContext';
 
 interface ConfirmDialogProps {
     title: string;

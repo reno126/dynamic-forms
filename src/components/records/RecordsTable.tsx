@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useCallback } from 'react';
 import { useRecords, useRecordActions } from '@/contexts/RecordsContext';
 import {
     Table,
@@ -11,7 +12,8 @@ import {
 } from '@/lib/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/lib/ui/card';
 import type { FormDefinition, FormRecord } from '@/lib/types';
-import { useMemo, useCallback } from 'react';
+import { formatCell } from '@/lib/utils';
+import { useModal } from '@/contexts/ModalContext';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -20,8 +22,6 @@ import {
 } from '@/lib/ui/dropdown-menu';
 import { Button } from '@/lib/ui/button';
 import { MoreHorizontal } from 'lucide-react';
-import { formatCell } from '@/lib/utils';
-import { useModal } from '@/contexts/ModalContext';
 
 interface RecordsTableProps {
     formDefinition: FormDefinition;
