@@ -13,7 +13,7 @@ import type { FormDefinition, CreateFormValues } from '@/lib/types';
 
 interface FormDefinitionsContextType {
     formDefinitions: FormDefinition[] | null;
-    addForm: (form: CreateFormValues) => Promise<void>;
+    addForm: (form: CreateFormValues) => Promise<string>;
     getFormDefinition: (id: string) => FormDefinition | undefined;
     deleteForm: (id: string) => Promise<void>;
     deleteAllData: () => Promise<void>;
@@ -33,16 +33,24 @@ export const FormDefinitionsProvider = ({
     const addForm = useCallback(async (form: CreateFormValues) => {
         const newId = nanoid();
         const newForm: FormDefinition = {
-            ...form,
             id: newId,
+            name: form.name,
             description: form.description || '',
-            fields: form.fields.map((field) => ({
-                ...field,
-                id: nanoid(),
-                options: field.type === 'select' ? field.options || [] : [],
-            })),
+            fields: form.fields.map((field) => {
+                const fieldId = nanoid();
+                return {
+                    id: fieldId,
+                    name: field.label.toLowerCase().replace(/\s+/g, '_') || fieldId,
+                    label: field.label,
+                    type: field.type,
+                    isRequired: field.isRequired,
+                    isMultiSelect: field.isMultiSelect,
+                    options: field.type === 'select' ? field.options || [] : [],
+                };
+            }),
         };
         await db.formDefinitions.add(newForm);
+        return newId;
     }, []);
 
     const getFormDefinition = useCallback((id: string) => {

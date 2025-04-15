@@ -37,8 +37,8 @@ export default function CreateFormPage() {
     });
 
     const onSubmit = async (data: CreateFormValues) => {
-        await addForm(data);
-        router.push('/forms');
+        const newFormId = await addForm(data);
+        router.push(`/forms/${newFormId}`);
     };
 
     return (
@@ -58,6 +58,7 @@ export default function CreateFormPage() {
                                 <Label htmlFor="name">Form Name</Label>
                                 <Input
                                     id="name"
+                                    data-testid="form-name-input"
                                     {...register('name', { required: 'Form name is required' })}
                                 />
                                 {errors.name && (
@@ -66,7 +67,11 @@ export default function CreateFormPage() {
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="description">Description</Label>
-                                <Input id="description" {...register('description')} />
+                                <Input
+                                    id="description"
+                                    data-testid="form-description-input"
+                                    {...register('description')}
+                                />
                             </div>
 
                             <div className="space-y-2">

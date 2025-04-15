@@ -30,6 +30,7 @@ export function SelectOptionsEditor({ fieldIndex, control, register, errors }: S
                             required: 'Option value cannot be empty',
                         })}
                         placeholder="Option value"
+                        data-testid={`select-option-input-${optionIndex}`}
                     />
                     {errors.fields?.[fieldIndex]?.options?.[optionIndex]?.value && (
                         <p className="text-sm text-red-500">
@@ -51,6 +52,7 @@ export function SelectOptionsEditor({ fieldIndex, control, register, errors }: S
                 variant="outline"
                 size="sm"
                 onClick={() => append({ value: '' })}
+                data-testid="add-select-option-button"
             >
                 <PlusIcon className="mr-2 h-4 w-4" />
                 Add Option

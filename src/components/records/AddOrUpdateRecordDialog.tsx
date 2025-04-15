@@ -61,7 +61,7 @@ export function AddOrUpdateRecordDialog({
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent>
+            <DialogContent data-testid="add-update-record-dialog">
                 <DialogHeader>
                     <DialogTitle>
                         {isEditMode ? 'Edit Record in' : 'Add New Record to'} {formDefinition.name}
@@ -79,7 +79,7 @@ export function AddOrUpdateRecordDialog({
                                 Cancel
                             </Button>
                         </DialogClose>
-                        <Button type="submit" disabled={isSubmitting}>
+                        <Button type="submit" disabled={isSubmitting} data-testid="save-record-button">
                             {isSubmitting ? 'Saving...' : isEditMode ? 'Save Changes' : 'Save Record'}
                         </Button>
                     </DialogFooter>

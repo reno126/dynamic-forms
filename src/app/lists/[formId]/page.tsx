@@ -55,11 +55,11 @@ function RecordsListView({ formId }: { formId: string }) {
     const action = (
         <div className="flex space-x-2">
             {hasRecords && (
-                <Button variant="destructive" onClick={handleDeleteAll}>
+                <Button variant="destructive" onClick={handleDeleteAll} data-testid="delete-all-records-button">
                     Delete All Records
                 </Button>
             )}
-            <Button onClick={handleAddRecord}>
+            <Button onClick={handleAddRecord} data-testid="add-record-button">
                 <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
                 Add New Record
             </Button>
@@ -83,7 +83,7 @@ function RecordsListView({ formId }: { formId: string }) {
                         title="No records yet"
                         description="Get started by adding the first record for this form."
                         actions={
-                            <Button onClick={handleAddRecord}>
+                            <Button onClick={handleAddRecord} data-testid="add-record-button-empty">
                                 <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
                                 Add New Record
                             </Button>

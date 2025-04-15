@@ -28,7 +28,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
     const isSelect = type === 'select';
 
     return (
-        <div className="rounded-md border bg-gray-50 p-4">
+        <div className="rounded-md border bg-gray-50 p-4 form-field-builder-item" data-testid={`form-field-builder-item-${index}`}>
             <div className="flex flex-col md:flex-row md:items-start md:space-x-2 space-y-4 md:space-y-0">
                 <div className="flex-1 space-y-1">
                     <Label htmlFor={`fields.${index}.label`} className="sr-only">
@@ -36,6 +36,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                     </Label>
                     <Input
                         placeholder="Field Label (e.g., First Name)"
+                        data-testid="field-label-input"
                         {...register(`fields.${index}.label`, {
                             required: 'Label is required',
                         })}
@@ -54,7 +55,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                                     onValueChange={controllerField.onChange}
                                     value={controllerField.value}
                                 >
-                                    <SelectTrigger className="w-[120px]">
+                                    <SelectTrigger className="w-[120px]" data-testid="field-type-select">
                                         <SelectValue placeholder="Type" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -75,6 +76,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                             render={({ field }) => (
                                 <Checkbox
                                     id={`fields.${index}.isRequired`}
+                                    data-testid="field-required-checkbox"
                                     checked={field.value}
                                     onCheckedChange={field.onChange}
                                 />
@@ -88,6 +90,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                         size="icon"
                         onClick={() => remove(index)}
                         className="flex-shrink-0"
+                        data-testid="remove-field-button"
                     >
                         <TrashIcon className="h-4 w-4" />
                     </Button>
@@ -102,6 +105,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                             render={({ field }) => (
                                 <Checkbox
                                     id={`fields.${index}.isMultiSelect`}
+                                    data-testid="field-multiselect-checkbox"
                                     checked={field.value}
                                     onCheckedChange={field.onChange}
                                 />

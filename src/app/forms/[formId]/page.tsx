@@ -43,7 +43,7 @@ export default function FormDetailsPage({ params }: FormDetailsPageProps) {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>{formDefinition.name}</CardTitle>
+                        <CardTitle data-testid="form-details-title">{formDefinition.name}</CardTitle>
                         <CardDescription>{formDefinition.description}</CardDescription>
                     </CardHeader>
                     <CardContent>
