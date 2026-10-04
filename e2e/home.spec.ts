@@ -5,5 +5,5 @@ test('should navigate to the home page', async ({ page }) => {
 
     await expect(page).toHaveTitle(/Dynamic Forms/);
 
-    await expect(page.getByTestId('page-header-dashboard')).toBeVisible();
-}); 
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+});

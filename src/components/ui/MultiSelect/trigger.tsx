@@ -18,41 +18,53 @@ export const MultiSelectTrigger = forwardRef<
 >(({ className, ...props }, ref) => {
     const { placeholder, selectedValues, options, toggleOption } = useMultiSelect();
     return (
-        <PopoverTrigger asChild>
-            <Button
-                ref={ref}
-                {...props}
-                className={cn(
-                    "flex w-full p-1 rounded-md border min-h-10 h-auto items-center justify-between bg-background hover:bg-inherit [&_svg]:pointer-events-auto!",
-                    className
-                )}
-                variant="outline"
-            >
-                <div className="flex flex-wrap items-center gap-1 flex-grow">
-                    {selectedValues.length > 0 ? (
-                        selectedValues.map((value) => {
-                            const option = options.find((o) => o.value === value);
-                            return (
-                                <Badge key={value} variant="secondary" className="px-2 py-1">
-                                    <span>{option?.label}</span>
-                                    <XCircle
-                                        className="ml-2 h-4 w-4 cursor-pointer"
-                                        onClick={(event) => {
-                                            event.stopPropagation();
-                                            toggleOption(value);
-                                        }}
-                                    />
-                                </Badge>
-                            );
-                        })
-                    ) : (
-                        <span className="mx-1 text-sm text-muted-foreground">{placeholder}</span>
+        <div className="flex w-full items-center gap-1">
+            <PopoverTrigger asChild>
+                <Button
+                    ref={ref}
+                    {...props}
+                    className={cn(
+                        "flex w-full p-1 rounded-md border min-h-10 h-auto items-center justify-between bg-background hover:bg-inherit",
+                        className
                     )}
-                </div>
-                <ChevronDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-        </PopoverTrigger>
+                    variant="outline"
+                >
+                    <div className="flex flex-grow flex-wrap items-center gap-1">
+                        {selectedValues.length > 0 ? (
+                            selectedValues.map((selectedValue) => {
+                                const selectedOption = options.find((candidateOption) => candidateOption.value === selectedValue);
+                                return (
+                                    <Badge key={selectedValue} variant="secondary" className="px-2 py-1">
+                                        {selectedOption?.label ?? selectedValue}
+                                    </Badge>
+                                );
+                            })
+                        ) : (
+                            <span className="mx-1 text-sm text-muted-foreground">{placeholder}</span>
+                        )}
+                    </div>
+                    <ChevronDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+            </PopoverTrigger>
+            {selectedValues.map((selectedValue) => {
+                const selectedOption = options.find((candidateOption) => candidateOption.value === selectedValue);
+                const accessibleOptionName = selectedOption?.label ?? selectedValue;
+
+                return (
+                    <Button
+                        key={selectedValue}
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        aria-label={`Remove ${accessibleOptionName}`}
+                        onClick={() => toggleOption(selectedValue)}
+                    >
+                        <XCircle className="h-4 w-4" />
+                    </Button>
+                );
+            })}
+        </div>
     );
 });
 
-MultiSelectTrigger.displayName = "MultiSelectTrigger"; 
+MultiSelectTrigger.displayName = "MultiSelectTrigger";

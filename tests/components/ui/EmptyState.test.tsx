@@ -5,7 +5,7 @@ import { Button } from '@/lib/ui/button';
 
 // Mock the illustration component to avoid testing its implementation details
 jest.mock('@/components/illustrations/EmptyBoxIllustration', () => ({
-    EmptyBoxIllustration: () => <div data-testid="empty-box-illustration" />,
+    EmptyBoxIllustration: () => <svg role="img" aria-label="Empty box illustration" />,
 }));
 
 describe('EmptyState', () => {
@@ -20,7 +20,7 @@ describe('EmptyState', () => {
 
     it('should render the illustration', () => {
         render(<EmptyState title="Title" description="Desc" />);
-        expect(screen.getByTestId('empty-box-illustration')).toBeInTheDocument();
+        expect(screen.getByRole('img', { name: 'Empty box illustration' })).toBeInTheDocument();
     });
 
     it('should render actions when provided', () => {
@@ -34,12 +34,9 @@ describe('EmptyState', () => {
         expect(button).toBeInTheDocument();
     });
 
-    it('should not render the actions container when actions are not provided', () => {
+    it('does not render an action when none is provided', () => {
         render(<EmptyState title="Title" description="Desc" />);
 
-        // The container for actions has a specific margin-top class.
-        // A more direct way is to check for the absence of the button or action elements.
-        const button = screen.queryByRole('button');
-        expect(button).not.toBeInTheDocument();
+        expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
-}); 
+});

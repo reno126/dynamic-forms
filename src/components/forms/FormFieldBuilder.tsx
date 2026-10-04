@@ -28,14 +28,20 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
     const isSelect = type === 'select';
 
     return (
-        <div className="rounded-md border bg-gray-50 p-4 form-field-builder-item" data-testid={`form-field-builder-item-${index}`}>
+        <div
+            role="group"
+            aria-label={`Field ${index + 1}`}
+            className="rounded-md border bg-gray-50 p-4 form-field-builder-item"
+            data-testid={`form-field-builder-item-${index}`}
+        >
             <div className="flex flex-col md:flex-row md:items-start md:space-x-2 space-y-4 md:space-y-0">
                 <div className="flex-1 space-y-1">
                     <Label htmlFor={`fields.${index}.label`} className="sr-only">
-                        Label
+                        Field label
                     </Label>
                     <Input
                         placeholder="Field Label (e.g., First Name)"
+                        id={`fields.${index}.label`}
                         data-testid="field-label-input"
                         {...register(`fields.${index}.label`, {
                             required: 'Label is required',
@@ -55,7 +61,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                                     onValueChange={controllerField.onChange}
                                     value={controllerField.value}
                                 >
-                                    <SelectTrigger className="w-[120px]" data-testid="field-type-select">
+                                    <SelectTrigger aria-label="Field type" className="w-[120px]" data-testid="field-type-select">
                                         <SelectValue placeholder="Type" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -89,6 +95,7 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                         variant="outline"
                         size="icon"
                         onClick={() => remove(index)}
+                        aria-label={`Remove field ${index + 1}`}
                         className="flex-shrink-0"
                         data-testid="remove-field-button"
                     >
@@ -120,4 +127,4 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
             )}
         </div>
     );
-} 
+}

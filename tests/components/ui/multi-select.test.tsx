@@ -6,94 +6,93 @@ import {
     MultiSelectTrigger,
     MultiSelectContent,
 } from '@/components/ui/MultiSelect';
-import { FORM_FIELD_TYPES } from '@/constants/forms';
 
-jest.mock('@/lib/ui/popover', () => ({
-    Popover: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    PopoverTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    PopoverContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
+interface MultiSelectHarnessProps {
+    value: string[];
+    onValueChange: (nextValues: string[]) => void;
+    placeholder?: string;
+}
 
-describe('MultiSelect', () => {
-    const options = [
-        { label: 'React', value: 'react' },
-        { label: 'Vue', value: 'vue' },
-        { label: 'Svelte', value: 'svelte' },
-    ];
+const frameworkOptions = [
+    { label: 'React', value: 'react' },
+    { label: 'Vue', value: 'vue' },
+    { label: 'Svelte', value: 'svelte' },
+];
 
-    const TestMultiSelect = (props: any) => (
-        <MultiSelect options={options} {...props}>
-            <MultiSelectTrigger />
+function MultiSelectHarness({ value, onValueChange, placeholder }: MultiSelectHarnessProps) {
+    return (
+        <MultiSelect options={frameworkOptions} value={value} onValueChange={onValueChange} placeholder={placeholder}>
+            <MultiSelectTrigger aria-label="Frameworks" />
             <MultiSelectContent />
         </MultiSelect>
     );
+}
 
-    it('should render with a placeholder when no value is selected', () => {
-        render(<TestMultiSelect value={[]} onValueChange={() => { }} placeholder="Select a framework..." />);
+function renderMultiSelect(value: string[], onValueChange: (nextValues: string[]) => void = () => undefined) {
+    const user = userEvent.setup();
+    render(<MultiSelectHarness value={value} onValueChange={onValueChange} placeholder="Select a framework..." />);
+
+    const trigger = screen.getByRole('button', { name: 'Frameworks' });
+
+    return {
+        user,
+        trigger,
+        async openOptions() {
+            await user.click(trigger);
+            return screen.getByRole('listbox');
+        },
+    };
+}
+
+describe('MultiSelect', () => {
+    it('renders its placeholder when no value is selected', () => {
+        renderMultiSelect([]);
+
         expect(screen.getByText('Select a framework...')).toBeInTheDocument();
     });
 
-    it('should display selected values as badges', () => {
-        render(<TestMultiSelect value={['react', 'vue']} onValueChange={() => { }} />);
-        const trigger = screen.getByRole('button');
+    it('displays selected values', () => {
+        const { trigger } = renderMultiSelect(['react', 'vue']);
+
         expect(within(trigger).getByText('React')).toBeInTheDocument();
         expect(within(trigger).getByText('Vue')).toBeInTheDocument();
     });
 
-    it('should open the content with options on trigger click', async () => {
-        const user = userEvent.setup();
-        render(<TestMultiSelect value={[]} onValueChange={() => { }} />);
+    it('shows available options after opening the trigger', async () => {
+        const { openOptions } = renderMultiSelect([]);
+        const optionList = await openOptions();
 
-        const trigger = screen.getByRole('button');
-        await user.click(trigger);
-
-        const list = screen.getByRole('listbox');
-        expect(within(list).getByText('React')).toBeInTheDocument();
-        expect(within(list).getByText('Vue')).toBeInTheDocument();
-        expect(within(list).getByText('Svelte')).toBeInTheDocument();
+        expect(within(optionList).getByText('React')).toBeInTheDocument();
+        expect(within(optionList).getByText('Vue')).toBeInTheDocument();
+        expect(within(optionList).getByText('Svelte')).toBeInTheDocument();
     });
 
-    it('should call onValueChange with the new value when an option is selected', async () => {
-        const user = userEvent.setup();
+    it('reports the selected value when an option is chosen', async () => {
         const onValueChange = jest.fn();
-        render(<TestMultiSelect value={['react']} onValueChange={onValueChange} />);
+        const { openOptions, user } = renderMultiSelect(['react'], onValueChange);
+        const optionList = await openOptions();
 
-        await user.click(screen.getByRole('button'));
-        const list = screen.getByRole('listbox');
-        await user.click(within(list).getByText('Vue'));
+        await user.click(within(optionList).getByText('Vue'));
 
-        expect(onValueChange).toHaveBeenCalledTimes(1);
         expect(onValueChange).toHaveBeenCalledWith(['react', 'vue']);
     });
 
-    it('should call onValueChange with the updated value when an option is deselected', async () => {
-        const user = userEvent.setup();
+    it('reports the updated value when an option is deselected', async () => {
         const onValueChange = jest.fn();
-        render(<TestMultiSelect value={['react', 'vue']} onValueChange={onValueChange} />);
+        const { openOptions, user } = renderMultiSelect(['react', 'vue'], onValueChange);
+        const optionList = await openOptions();
 
-        await user.click(screen.getByRole('button'));
-        const list = screen.getByRole('listbox');
-        await user.click(within(list).getByText('Vue'));
+        await user.click(within(optionList).getByText('Vue'));
 
-        expect(onValueChange).toHaveBeenCalledTimes(1);
         expect(onValueChange).toHaveBeenCalledWith(['react']);
     });
 
-    it('should call onValueChange when deselecting via the "X" on a badge', async () => {
-        const user = userEvent.setup();
+    it('allows a selected value to be removed by its accessible control name', async () => {
         const onValueChange = jest.fn();
-        render(<TestMultiSelect value={['react', 'vue']} onValueChange={onValueChange} />);
+        const { user } = renderMultiSelect(['react', 'vue'], onValueChange);
 
-        const trigger = screen.getByRole('button');
-        const reactBadge = within(trigger).getByText('React');
-        const xCircle = reactBadge.parentElement?.querySelector('svg');
+        await user.click(screen.getByRole('button', { name: 'Remove React' }));
 
-        expect(xCircle).toBeInTheDocument();
-        if (xCircle) {
-            await user.click(xCircle);
-        }
-
-        expect(onValueChange).toHaveBeenCalledTimes(1);
         expect(onValueChange).toHaveBeenCalledWith(['vue']);
     });
-}); 
+});

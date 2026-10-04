@@ -7,45 +7,44 @@ test.describe('Forms Management', () => {
 
         await page.goto('/forms/new');
 
-        await page.getByTestId('form-name-input').fill(formName);
-        await page.getByTestId('form-description-input').fill(formDescription);
+        await page.getByRole('textbox', { name: 'Form Name' }).fill(formName);
+        await page.getByRole('textbox', { name: 'Description' }).fill(formDescription);
 
-        const textField = page.getByTestId('form-field-builder-item-0');
-        await textField.getByTestId('field-label-input').fill('Full Name');
-        await textField.getByTestId('field-type-select').click();
+        const textField = page.getByRole('group', { name: 'Field 1' });
+        await textField.getByRole('textbox', { name: 'Field label' }).fill('Full Name');
+        await textField.getByRole('combobox', { name: 'Field type' }).click();
         await page.getByRole('option', { name: 'text' }).click();
 
         await page.getByRole('button', { name: 'Add Field' }).click();
-        const numberField = page.getByTestId('form-field-builder-item-1');
-        await numberField.getByTestId('field-label-input').fill('Age');
-        await numberField.getByTestId('field-type-select').click();
+        const numberField = page.getByRole('group', { name: 'Field 2' });
+        await numberField.getByRole('textbox', { name: 'Field label' }).fill('Age');
+        await numberField.getByRole('combobox', { name: 'Field type' }).click();
         await page.getByRole('option', { name: 'number' }).click();
 
         await page.getByRole('button', { name: 'Add Field' }).click();
-        const checkboxField = page.getByTestId('form-field-builder-item-2');
-        await checkboxField.getByTestId('field-label-input').fill('Subscribe to newsletter');
-        await checkboxField.getByTestId('field-type-select').click();
+        const checkboxField = page.getByRole('group', { name: 'Field 3' });
+        await checkboxField.getByRole('textbox', { name: 'Field label' }).fill('Subscribe to newsletter');
+        await checkboxField.getByRole('combobox', { name: 'Field type' }).click();
         await page.getByRole('option', { name: 'checkbox' }).click();
 
         await page.getByRole('button', { name: 'Add Field' }).click();
-        const selectField = page.getByTestId('form-field-builder-item-3');
-        await selectField.getByTestId('field-label-input').fill('T-Shirt Size');
-        await selectField.getByTestId('field-type-select').click();
+        const selectField = page.getByRole('group', { name: 'Field 4' });
+        await selectField.getByRole('textbox', { name: 'Field label' }).fill('T-Shirt Size');
+        await selectField.getByRole('combobox', { name: 'Field type' }).click();
         await page.getByRole('option', { name: 'select' }).click();
-        await selectField.getByTestId('add-select-option-button').click();
+        await selectField.getByRole('button', { name: 'Add Option' }).click();
 
-        const newOptionInput = selectField.getByTestId('select-option-input-0');
+        const newOptionInput = selectField.getByRole('textbox', { name: 'Option 1' });
         await expect(newOptionInput).toBeVisible();
         await newOptionInput.fill('Medium');
 
         await page.getByRole('button', { name: 'Create Form' }).click();
 
         await page.waitForURL(/\/forms\/.*/);
-        const title = page.getByTestId('form-details-title');
-        await expect(title).toHaveText(formName);
+        await expect(page.getByRole('heading', { name: formName })).toBeVisible();
 
         await page.goto('/forms');
-        await expect(page.getByTestId('page-header-my-forms')).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'My Forms' })).toBeVisible();
         await expect(page.getByRole('cell', { name: formName })).toBeVisible();
     });
-}); 
+});

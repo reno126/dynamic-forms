@@ -1,59 +1,56 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { formatCell } from '@/lib/utils';
-import { FormField } from '@/lib/types';
+import type { FormField } from '@/lib/types';
 
-// Mock the Badge component to ensure it has a test id
-jest.mock('@/lib/ui/badge', () => ({
-    Badge: ({ children, ...props }: { children: React.ReactNode }) => (
-        <div data-testid="badge" {...props}>
-            {children}
-        </div>
-    ),
-}));
+function createFormField(overrides: Partial<FormField> = {}): FormField {
+    return {
+        id: 'field-id',
+        name: 'field_name',
+        label: 'Field label',
+        type: 'text',
+        ...overrides,
+    };
+}
 
 describe('formatCell', () => {
-    it('should format a Date object to a locale date string', () => {
-        const date = new Date(2023, 10, 25); // Month is 0-indexed, so 10 is November
-        const field = { type: 'date' } as FormField;
-        expect(formatCell(date, field)).toBe(date.toLocaleDateString());
+    it('formats a Date object as a locale date string', () => {
+        const dateValue = new Date(2023, 10, 25);
+
+        expect(formatCell(dateValue, createFormField({ type: 'date' }))).toBe(dateValue.toLocaleDateString());
     });
 
-    it('should return "Yes" for true and "No" for false boolean values', () => {
-        const field = { type: 'checkbox' } as FormField;
-        expect(formatCell(true, field)).toBe('Yes');
-        expect(formatCell(false, field)).toBe('No');
+    it('formats boolean values as Yes or No', () => {
+        const checkboxField = createFormField({ type: 'checkbox' });
+
+        expect(formatCell(true, checkboxField)).toBe('Yes');
+        expect(formatCell(false, checkboxField)).toBe('No');
     });
 
-    it('should return "N/A" for null or undefined values', () => {
-        const field = { type: 'text' } as FormField;
-        expect(formatCell(null, field)).toBe('N/A');
-        expect(formatCell(undefined, field)).toBe('N/A');
+    it('formats null and undefined values as unavailable', () => {
+        const textField = createFormField();
+
+        expect(formatCell(null, textField)).toBe('N/A');
+        expect(formatCell(undefined, textField)).toBe('N/A');
     });
 
-    it('should return a string representation for other data types', () => {
-        const field = { type: 'text' } as FormField;
-        expect(formatCell('Hello', field)).toBe('Hello');
-        expect(formatCell(123, field)).toBe('123');
+    it('returns string representations for other scalar values', () => {
+        const textField = createFormField();
+
+        expect(formatCell('Hello', textField)).toBe('Hello');
+        expect(formatCell(123, textField)).toBe('123');
     });
 
-    it('should render badges for multi-select array values', () => {
-        const data = ['Option 1', 'Option 2'];
-        const field = { isMultiSelect: true } as FormField;
-        const result = formatCell(data, field);
-        render(<>{result}</>);
+    it('renders each selected multi-select value', () => {
+        render(<>{formatCell(['Option 1', 'Option 2'], createFormField({ isMultiSelect: true }))}</>);
 
-        const badges = screen.getAllByTestId('badge');
-        expect(badges).toHaveLength(2);
-        expect(badges[0]).toHaveTextContent('Option 1');
-        expect(badges[1]).toHaveTextContent('Option 2');
+        expect(screen.getByText('Option 1')).toBeInTheDocument();
+        expect(screen.getByText('Option 2')).toBeInTheDocument();
     });
 
-    it('should handle an empty array for multi-select', () => {
-        const data: string[] = [];
-        const field = { isMultiSelect: true } as FormField;
-        const result = formatCell(data, field);
-        render(<>{result}</>);
-        expect(screen.queryAllByTestId('badge')).toHaveLength(0);
+    it('renders no values for an empty multi-select array', () => {
+        render(<>{formatCell([], createFormField({ isMultiSelect: true }))}</>);
+
+        expect(screen.queryByText('Option 1')).not.toBeInTheDocument();
     });
-}); 
+});

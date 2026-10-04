@@ -30,6 +30,7 @@ export function SelectOptionsEditor({ fieldIndex, control, register, errors }: S
                             required: 'Option value cannot be empty',
                         })}
                         placeholder="Option value"
+                        aria-label={`Option ${optionIndex + 1}`}
                         data-testid={`select-option-input-${optionIndex}`}
                     />
                     {errors.fields?.[fieldIndex]?.options?.[optionIndex]?.value && (
@@ -59,4 +60,4 @@ export function SelectOptionsEditor({ fieldIndex, control, register, errors }: S
             </Button>
         </div>
     );
-} 
+}
