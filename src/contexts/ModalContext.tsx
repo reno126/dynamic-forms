@@ -13,7 +13,7 @@ type ModalProps = {
     confirm: {
         title: string;
         description: string;
-        onConfirm: () => void;
+        onConfirm: () => Promise<void>;
     };
 };
 
@@ -78,4 +78,4 @@ export const useModal = () => {
         throw new Error('useModal must be used within a ModalProvider');
     }
     return context;
-}; 
+};
