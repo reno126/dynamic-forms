@@ -42,9 +42,19 @@ test.describe('Forms Management', () => {
 
         await page.waitForURL(/\/forms\/.*/);
         await expect(page.getByRole('heading', { name: formName })).toBeVisible();
+        await expect(page.getByText(formDescription)).toBeVisible();
+        await expect(page.getByText('Full Name', { exact: true })).toBeVisible();
+        await expect(page.getByText('Age', { exact: true })).toBeVisible();
+        await expect(page.getByText('Subscribe to newsletter', { exact: true })).toBeVisible();
+        await expect(page.getByText('T-Shirt Size', { exact: true })).toBeVisible();
 
         await page.goto('/forms');
         await expect(page.getByRole('heading', { name: 'My Forms' })).toBeVisible();
-        await expect(page.getByRole('cell', { name: formName })).toBeVisible();
+        const createdFormRow = page.getByRole('row').filter({
+            has: page.getByRole('cell', { name: formName }),
+        });
+        await expect(createdFormRow).toBeVisible();
+        await expect(createdFormRow).toContainText(formDescription);
+        await expect(createdFormRow.getByRole('cell', { name: '4', exact: true })).toBeVisible();
     });
 });

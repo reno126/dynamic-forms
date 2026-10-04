@@ -81,11 +81,14 @@ export default function CreateFormPage() {
                                 <Label htmlFor="name">Form Name</Label>
                                 <Input
                                     id="name"
+                                    aria-invalid={Boolean(errors.name)}
+                                    aria-describedby={errors.name ? 'form-name-error' : undefined}
+                                    aria-errormessage={errors.name ? 'form-name-error' : undefined}
                                     data-testid="form-name-input"
                                     {...register('name', { required: 'Form name is required' })}
                                 />
                                 {errors.name && (
-                                    <p className="text-sm text-red-500">{errors.name.message}</p>
+                                    <p id="form-name-error" className="text-sm text-red-500">{errors.name.message}</p>
                                 )}
                             </div>
                             <div className="space-y-2">

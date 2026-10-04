@@ -42,13 +42,16 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
                     <Input
                         placeholder="Field Label (e.g., First Name)"
                         id={`fields.${index}.label`}
+                        aria-invalid={Boolean(errors.fields?.[index]?.label)}
+                        aria-describedby={errors.fields?.[index]?.label ? `fields.${index}.label-error` : undefined}
+                        aria-errormessage={errors.fields?.[index]?.label ? `fields.${index}.label-error` : undefined}
                         data-testid="field-label-input"
                         {...register(`fields.${index}.label`, {
                             required: 'Label is required',
                         })}
                     />
                     {errors.fields?.[index]?.label && (
-                        <p className="text-sm text-red-500">{errors.fields[index]?.label?.message}</p>
+                        <p id={`fields.${index}.label-error`} className="text-sm text-red-500">{errors.fields[index]?.label?.message}</p>
                     )}
                 </div>
                 <div className="flex items-center space-x-2">
