@@ -1,12 +1,9 @@
 'use client';
 
-import React from 'react';
-import {
-
-} from '@/lib/ui/dialog';
+import { useState, useTransition } from 'react';
+import { Button } from '@/lib/ui/button';
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -18,7 +15,7 @@ import {
 interface ConfirmDialogProps {
     title: string;
     description: string;
-    onConfirm: () => void;
+    onConfirm: () => Promise<void>;
     onClose: () => void;
     isOpen: boolean;
 }
@@ -30,9 +27,19 @@ export function ConfirmDialog({
     onConfirm,
     onClose,
 }: ConfirmDialogProps) {
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isPending, startTransition] = useTransition();
+
     const handleConfirm = () => {
-        onConfirm();
-        onClose();
+        setErrorMessage(null);
+        startTransition(async () => {
+            try {
+                await onConfirm();
+                onClose();
+            } catch {
+                setErrorMessage('The action could not be completed. Please try again.');
+            }
+        });
     };
 
     return (
@@ -41,12 +48,15 @@ export function ConfirmDialog({
                 <AlertDialogHeader>
                     <AlertDialogTitle>{title}</AlertDialogTitle>
                     <AlertDialogDescription>{description}</AlertDialogDescription>
+                    {errorMessage && <p role="alert" className="text-sm text-red-500">{errorMessage}</p>}
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleConfirm}>Continue</AlertDialogAction>
+                    <Button onClick={handleConfirm} disabled={isPending}>
+                        {isPending ? 'Working...' : 'Continue'}
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
     );
-} 
+}
