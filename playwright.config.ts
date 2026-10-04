@@ -14,7 +14,7 @@ export default defineConfig({
     outputDir: 'test-results/',
     forbidOnly: !!process.env.CI,
     workers: process.env.CI ? 1 : undefined,
-    reporter: 'html',
+    reporter: process.env.CI ? 'list' : 'html',
 
     webServer: {
         command: 'npm run dev',

@@ -10,8 +10,11 @@
     "lint:fix": "next lint --fix",
     "format": "prettier --write .",
     "test": "jest",
+    "test:focused": "jest --runInBand",
+    "test:unit": "jest --runInBand",
     "test:watch": "jest --watch",
-    "test:e2e": "npx playwright test"
+    "test:e2e": "playwright test",
+    "test:ci": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.14",
