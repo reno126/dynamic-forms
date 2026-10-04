@@ -33,7 +33,9 @@ export function AddOrUpdateRecordDialog({
         handleSubmit,
         control,
         reset,
-        formState: { isSubmitting },
+        setError,
+        clearErrors,
+        formState: { errors, isSubmitting },
     } = useForm<FormRecordData>();
 
     const isEditMode = !!record;
@@ -51,12 +53,20 @@ export function AddOrUpdateRecordDialog({
     };
 
     const onSubmit = async (data: FormRecordData) => {
-        if (isEditMode) {
-            await updateRecord({ ...record, data });
-        } else {
-            await addRecord(formDefinition.id, data);
+        clearErrors('root');
+        try {
+            if (isEditMode) {
+                await updateRecord({ ...record, data });
+            } else {
+                await addRecord(formDefinition.id, data);
+            }
+            handleClose();
+        } catch {
+            setError('root', {
+                type: 'server',
+                message: 'Could not save the record. Please try again.',
+            });
         }
-        handleClose();
     };
 
     return (
@@ -68,6 +78,11 @@ export function AddOrUpdateRecordDialog({
                     </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    {errors.root?.message && (
+                        <p role="alert" className="text-sm text-red-500">
+                            {errors.root.message}
+                        </p>
+                    )}
                     {formDefinition.fields.map((field) => (
                         <div key={field.id}>
                             <DynamicFieldRenderer field={field} control={control} />
@@ -87,4 +102,4 @@ export function AddOrUpdateRecordDialog({
             </DialogContent>
         </Dialog>
     );
-} 
+}
