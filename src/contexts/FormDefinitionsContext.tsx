@@ -40,7 +40,7 @@ export const FormDefinitionsProvider = ({
                 const fieldId = nanoid();
                 return {
                     id: fieldId,
-                    name: field.label.toLowerCase().replace(/\s+/g, '_') || fieldId,
+                    name: field.name || fieldId,
                     label: field.label,
                     type: field.type,
                     isRequired: field.isRequired,
@@ -93,4 +93,4 @@ export const useFormDefinitions = () => {
         );
     }
     return context;
-}; 
+};
