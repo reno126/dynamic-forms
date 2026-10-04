@@ -14,20 +14,31 @@ import { FormFieldBuilder } from '@/components/forms/FormFieldBuilder';
 import { PageWrapper } from '@/components/layout/PageWrapper';
 import { BackLinkButton } from '@/components/ui/BackLinkButton';
 
+function createEmptyDefaultField(): FormBuilderField {
+    return {
+        name: `field_${nanoid()}`,
+        label: '',
+        type: 'text',
+        isRequired: false,
+        options: [],
+        isMultiSelect: false,
+    };
+}
+
 export default function CreateFormPage() {
     const router = useRouter();
     const { addForm } = useFormDefinitions();
-    const emptyDefaultField: FormBuilderField = { name: `field_${nanoid(6)}`, label: '', type: 'text', isRequired: false, options: [], isMultiSelect: false };
     const {
         register,
         handleSubmit,
         control,
+        setError,
         formState: { errors, isSubmitting },
     } = useForm<CreateFormValues>({
         defaultValues: {
             name: '',
             description: '',
-            fields: [emptyDefaultField],
+            fields: [createEmptyDefaultField()],
         },
     });
 
@@ -37,8 +48,15 @@ export default function CreateFormPage() {
     });
 
     const onSubmit = async (data: CreateFormValues) => {
-        const newFormId = await addForm(data);
-        router.push(`/forms/${newFormId}`);
+        try {
+            const newFormId = await addForm(data);
+            router.push(`/forms/${newFormId}`);
+        } catch {
+            setError('root', {
+                type: 'server',
+                message: 'Could not create the form. Please try again.',
+            });
+        }
     };
 
     return (
@@ -49,6 +67,11 @@ export default function CreateFormPage() {
                     <h1 className="text-3xl font-bold">Create a New Form</h1>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)}>
+                    {errors.root?.message && (
+                        <p role="alert" className="mb-4 text-sm text-red-500">
+                            {errors.root.message}
+                        </p>
+                    )}
                     <Card>
                         <CardHeader>
                             <CardTitle>Create New Form</CardTitle>
@@ -92,7 +115,7 @@ export default function CreateFormPage() {
                                 type="button"
                                 variant="outline"
                                 size="sm"
-                                onClick={() => append(emptyDefaultField)}
+                                onClick={() => append(createEmptyDefaultField())}
                             >
                                 <PlusIcon className="mr-2 h-4 w-4" />
                                 Add Field
@@ -115,4 +138,4 @@ export default function CreateFormPage() {
             </div>
         </PageWrapper>
     );
-} 
+}
