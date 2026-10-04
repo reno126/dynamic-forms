@@ -13,8 +13,12 @@ interface DynamicFieldRendererProps {
     control: Control<FormRecordData>;
 }
 
+function isStringArray(value: unknown): value is string[] {
+    return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
 export function DynamicFieldRenderer({ field, control }: DynamicFieldRendererProps) {
-    const fieldName = field.name as keyof FormRecordData;
+    const fieldName = field.name;
     const rules = field.isRequired ? { required: `${field.label} is required.` } : {};
 
     if (field.type === 'checkbox') {
@@ -29,25 +33,52 @@ export function DynamicFieldRenderer({ field, control }: DynamicFieldRendererPro
     const renderField = (controllerField: ControllerRenderProps<FormRecordData, keyof FormRecordData>) => {
         switch (field.type) {
             case 'text':
-                return <Input id={field.name} {...controllerField} value={(controllerField.value as string) || ''} />;
+                return (
+                    <Input
+                        id={field.name}
+                        {...controllerField}
+                        value={typeof controllerField.value === 'string' ? controllerField.value : ''}
+                    />
+                );
             case 'number':
                 return (
                     <Input
                         id={field.name}
                         type="number"
-                        {...controllerField}
-                        value={(controllerField.value as number) || ''}
+                        name={controllerField.name}
+                        ref={controllerField.ref}
+                        onBlur={controllerField.onBlur}
+                        onChange={(changeEvent) => {
+                            const nextValue = changeEvent.currentTarget.value;
+                            const numericValue = changeEvent.currentTarget.valueAsNumber;
+                            controllerField.onChange(
+                                nextValue === '' || Number.isNaN(numericValue)
+                                    ? null
+                                    : numericValue
+                            );
+                        }}
+                        value={
+                            typeof controllerField.value === 'number' ||
+                            typeof controllerField.value === 'string'
+                                ? controllerField.value
+                                : ''
+                        }
                     />
                 );
             case 'date':
                 return (
-                    <Input id={field.name} type="date" {...controllerField} value={(controllerField.value as string) || ''} />
+                    <Input
+                        id={field.name}
+                        type="date"
+                        {...controllerField}
+                        value={typeof controllerField.value === 'string' ? controllerField.value : ''}
+                    />
                 );
             case 'select':
                 if (field.isMultiSelect) {
                     return (
                         <MultiSelect
-                            value={(controllerField.value as string[]) || []}
+                            value={isStringArray(controllerField.value) ? controllerField.value : []}
                             onValueChange={controllerField.onChange}
                             options={
                                 field.options?.map((opt) => ({
@@ -63,7 +94,10 @@ export function DynamicFieldRenderer({ field, control }: DynamicFieldRendererPro
                     );
                 }
                 return (
-                    <Select onValueChange={controllerField.onChange} value={controllerField.value as string | undefined}>
+                    <Select
+                        onValueChange={controllerField.onChange}
+                        value={typeof controllerField.value === 'string' ? controllerField.value : undefined}
+                    >
                         <SelectTrigger id={field.name}>
                             <SelectValue placeholder="Select an option" />
                         </SelectTrigger>
@@ -93,4 +127,4 @@ export function DynamicFieldRenderer({ field, control }: DynamicFieldRendererPro
             {(controllerField) => renderField(controllerField)}
         </FormFieldController>
     );
-} 
+}
