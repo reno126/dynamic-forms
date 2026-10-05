@@ -10,8 +10,10 @@ const config: Config = {
     testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     roots: ['<rootDir>/tests'],
+    testPathIgnorePatterns: ['<rootDir>/tests/e2e/'],
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
+        '^nanoid$': '<rootDir>/node_modules/nanoid/index.cjs',
     },
 };
 

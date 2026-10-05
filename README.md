@@ -1,36 +1,89 @@
-# Dynamic Forms Application
+<div align="center">
 
-This is a Next.js application for creating and managing dynamic forms and their corresponding records.
+# Dynamic Forms
 
-## Live demo at https://dynamic-forms-eta.vercel.app/
+### Design a form. Collect entries. Keep your data in your browser.
 
-## Core Technologies
+An interactive frontend demo for building custom forms and managing their submissions, with a responsive dashboard and browser-based persistence.
 
-Next.js, TypeScript, Tailwind CSS, shadcn/ui, React Hook Form, Dexie.js, Jest, RTL and Playwright
+[**Open the live demo →**](https://dynamic-forms-eta.vercel.app/)
 
-## Motivation
+<br />
 
-### Demo of `shadcn/ui`
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs)
+![React](https://img.shields.io/badge/React-19-149eca?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06b6d4?logo=tailwindcss)
+![Tests](https://img.shields.io/badge/tests-Jest_%2B_Playwright-99425b?logo=jest)
 
-A key aspect of this project is its use of `shadcn/ui`. Unlike traditional component libraries (like Material-UI), `shadcn/ui` is not a package installed from npm. Instead, it provides a CLI tool that copies the source code of beautifully designed components directly into your project.
+</div>
 
-This approach gives us full ownership and control over the component code. The base components provided by `shadcn/ui` are located in the `src/lib/ui/` directory. We can  modify them to fit the specific needs of our application. This avoids dependency-related issues and makes customization straightforward.
+---
 
-### Demo Dexie 
+## ✨ What you can do
 
-Dexie.js significantly simplifies interactions with the browser's IndexedDB. Instead of IndexedDB's complex, event-based native API, Dexie provides a clean, modern, and Promise-based syntax. This makes defining the database schema, handling versioning, and performing CRUD operations much more intuitive and readable.
+| Build | Collect | Manage |
+| --- | --- | --- |
+| Create forms with text, number, date, checkbox, and select fields. | Add records through forms generated from your definitions. | Browse records by form, edit entries, and remove forms or data. |
+| Mark fields as required and configure single or multiple select options. | Keep records available after refreshing the page. | View form and record totals from the dashboard. |
 
-### Demo of RHF (react hook form)
+### A quick tour
 
-RHF makes it very easy to work with dynamic forms. In turn, controlled components - operating in isolation - do not cause performance problems, even with a very large number of fields.
+1. Open **My Forms** and create a form.
+2. Add fields, choose their types, and configure any select options.
+3. Open **My Lists** to add and manage records for that form.
+4. Return to the dashboard to see the number of forms and records.
 
-## ToDo 
-- handle error - form now only the global error handler is implemented
-- extends e2e test
+> **Demo data is stored locally.** The app uses IndexedDB in your current browser. Data does not sync to an account or across devices, and clearing browser storage removes it. The Management page can delete all app data from this browser.
 
-## Getting Started
+## 🧰 Built with
 
-To run the application locally, first install the dependencies:
+- **Next.js App Router** and **React** for the application and routes
+- **TypeScript** for typed form definitions and record data
+- **Tailwind CSS** and locally owned **shadcn/ui** components for the interface
+- **React Hook Form** for form state and dynamic fields
+- **Dexie.js** for browser IndexedDB storage
+- **Jest**, **React Testing Library**, and **Playwright** for unit, component, and browser tests
 
+## 🚀 Run it locally
+
+You’ll need Node.js and npm installed.
+
+```bash
+git clone https://github.com/reno126/dynamic-forms.git
+cd dynamic-forms
 npm install
 npm run dev
+```
+
+Then open [http://localhost:3000](http://localhost:3000).
+
+## 🧪 Checks
+
+```bash
+npm run test          # Jest unit and component tests
+npm run test:e2e      # Playwright browser tests
+npm run test:ci       # Run both suites in sequence
+npm run build         # Create a production build
+```
+
+Playwright uses desktop Chrome. Install its browser once if needed:
+
+```bash
+npx playwright install chromium
+```
+
+## 🧩 Frontend notes
+
+- Form definitions and submitted records live in IndexedDB, so the demo needs no backend service or account system.
+- The UI components in `src/lib/ui/` are part of this repository and can be adapted directly.
+- Dynamic field rendering keeps the same form definition usable for both record entry and editing.
+- The project includes focused component tests as well as end-to-end flows for browser persistence.
+
+---
+
+<div align="center">
+
+Made as a frontend demo with Next.js, React, and TypeScript.
+
+</div>

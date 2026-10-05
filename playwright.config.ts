@@ -1,15 +1,13 @@
 import { defineConfig, devices } from '@playwright/test';
 import path from 'path';
 
-// Use process.env.PORT by default and fallback to 3000
 const PORT = process.env.PORT || 3000;
 
-// Set web server config here.
 const baseURL = `http://localhost:${PORT}`;
 
 export default defineConfig({
     timeout: 30 * 1000,
-    testDir: path.join(__dirname, 'e2e'),
+    testDir: path.join(__dirname, 'tests', 'e2e'),
     retries: process.env.CI ? 2 : 0,
     outputDir: 'test-results/',
     forbidOnly: !!process.env.CI,
@@ -17,10 +15,10 @@ export default defineConfig({
     reporter: process.env.CI ? 'list' : 'html',
 
     webServer: {
-        command: 'npm run dev',
+        command: `npm run dev -- --port ${PORT}`,
         url: baseURL,
         timeout: 120 * 1000,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
     },
 
     use: {

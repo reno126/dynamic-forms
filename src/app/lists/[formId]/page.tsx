@@ -59,10 +59,12 @@ function RecordsListView({ formId }: { formId: string }) {
                     Delete All Records
                 </Button>
             )}
-            <Button onClick={handleAddRecord} data-testid="add-record-button">
-                <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
-                Add New Record
-            </Button>
+            {hasRecords && (
+                <Button onClick={handleAddRecord} data-testid="add-record-button">
+                    <PlusIcon className="-ml-1 mr-2 h-5 w-5" />
+                    Add New Record
+                </Button>
+            )}
         </div>
     );
 

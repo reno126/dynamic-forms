@@ -36,6 +36,7 @@ export function DynamicFieldRenderer({ field, control }: DynamicFieldRendererPro
                 return (
                     <Input
                         id={field.name}
+                        required={field.isRequired}
                         {...controllerField}
                         value={typeof controllerField.value === 'string' ? controllerField.value : ''}
                     />

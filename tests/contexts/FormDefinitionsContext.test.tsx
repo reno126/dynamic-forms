@@ -12,9 +12,15 @@ const mockDeleteFormRecords = jest.fn<Promise<number>, []>();
 jest.mock('dexie-react-hooks', () => ({ useLiveQuery: () => [] }));
 jest.mock('@/lib/db', () => ({
   db: {
-    formDefinitions: { delete: mockDeleteFormDefinition },
+    formDefinitions: {
+      delete: (formId: string) => mockDeleteFormDefinition(formId),
+    },
     formRecords: {
-      where: () => ({ equals: () => ({ delete: mockDeleteFormRecords }) }),
+      where: () => ({
+        equals: () => ({
+          delete: () => mockDeleteFormRecords(),
+        }),
+      }),
     },
     delete: jest.fn(),
     open: jest.fn(),
