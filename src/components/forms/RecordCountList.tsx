@@ -18,7 +18,7 @@ function RecordCountListRow({ form }: { form: FormDefinition }) {
     const recordCount = useRecordCount(form.id);
     return (
         <TableRow>
-            <TableCell className="font-medium">{form.name}</TableCell>
+            <TableCell className="whitespace-normal font-medium wrap-anywhere">{form.name}</TableCell>
             <TableCell>{recordCount ?? '...'}</TableCell>
             <TableCell className="text-right">
                 <Link

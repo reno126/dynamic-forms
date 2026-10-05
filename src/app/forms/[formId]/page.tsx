@@ -10,7 +10,6 @@ import {
     CardTitle,
 } from '@/lib/ui/card';
 import { Badge } from '@/lib/ui/badge';
-import { PageWrapper } from '@/components/layout/PageWrapper';
 import { BackLinkButton } from '@/components/ui/BackLinkButton';
 
 interface FormDetailsPageProps {
@@ -29,16 +28,16 @@ export default function FormDetailsPage({ params }: FormDetailsPageProps) {
 
     if (formDefinition === null) {
         return (
-            <PageWrapper>
+            <>
                 <BackLinkButton href="/forms" text="Back to all forms" />
-                <p>Form not found.</p>
-            </PageWrapper>
+                <p className="mt-4">Form not found.</p>
+            </>
         );
     }
 
     return (
-        <PageWrapper>
-            <div className="space-y-6">
+        <>
+            <div className="space-y-4 sm:space-y-6">
                 <BackLinkButton href="/forms" text="Back to all forms" />
 
                 <Card>
@@ -52,10 +51,10 @@ export default function FormDetailsPage({ params }: FormDetailsPageProps) {
                             {formDefinition.fields.map((field) => (
                                 <div
                                     key={field.name}
-                                    className="flex items-center justify-between rounded-md border p-4"
+                                    className="flex flex-col gap-3 rounded-md border p-3 sm:flex-row sm:items-center sm:justify-between sm:p-4"
                                 >
-                                    <div className="flex items-center space-x-4">
-                                        <div>
+                                    <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
+                                        <div className="min-w-0 wrap-anywhere">
                                             <p className="font-semibold">{field.label}</p>
                                             <p className="text-sm text-gray-500">{field.name}</p>
                                         </div>
@@ -68,6 +67,6 @@ export default function FormDetailsPage({ params }: FormDetailsPageProps) {
                     </CardContent>
                 </Card>
             </div>
-        </PageWrapper>
+        </>
     );
 } 

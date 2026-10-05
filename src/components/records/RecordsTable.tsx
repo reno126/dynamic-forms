@@ -10,7 +10,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/lib/ui/table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/lib/ui/card';
+import { Card, CardContent } from '@/lib/ui/card';
 import type { FormDefinition, FormRecord } from '@/lib/types';
 import { formatCell } from '@/lib/utils';
 import { useModal } from '@/contexts/ModalContext';
@@ -101,20 +101,18 @@ export function RecordsTable({ formDefinition }: RecordsTableProps) {
                 </Table>
             </div>
 
-            <div className="md:hidden space-y-4">
+            <div className="space-y-3 md:hidden sm:space-y-4">
                 {records.map((record) => (
-                    <Card key={record.id}>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
-                            </CardTitle>
-                            {renderActionsMenu(record)}
-                        </CardHeader>
-                        <CardContent>
+                    <Card key={record.id} className="gap-0 py-0">
+                        <CardContent className="px-4 py-3 sm:px-6 sm:py-4">
+                            <div className="mb-2 flex justify-end">
+                                {renderActionsMenu(record)}
+                            </div>
                             <div className="space-y-2">
                                 {formDefinition.fields.map((field) => (
-                                    <div key={field.name} className="flex justify-between">
-                                        <span className="font-semibold text-sm">{field.label}</span>
-                                        <span className="text-sm text-gray-600">
+                                    <div key={field.name} className="flex items-start gap-3">
+                                        <span className="min-w-0 flex-1 text-sm font-semibold wrap-anywhere">{field.label}</span>
+                                        <span className="min-w-0 flex-1 text-right text-sm text-gray-600 wrap-anywhere">
                                             {formatCell(record.data[field.name], field)}
                                         </span>
                                     </div>

@@ -8,11 +8,11 @@ interface HeaderProps {
 
 export function Header({ onMenuClick }: HeaderProps) {
     return (
-        <header className="bg-gray-800 text-white p-4 flex items-center">
+        <header className="flex items-center bg-gray-800 p-3 text-white sm:p-4">
             <Button
                 variant="ghost"
                 size="icon"
-                className="mr-4 md:hidden"
+                className="mr-3 md:hidden sm:mr-4"
                 onClick={onMenuClick}
             >
                 <Menu className="h-6 w-6" />

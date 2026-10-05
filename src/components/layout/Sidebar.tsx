@@ -33,7 +33,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             <aside
                 className={cn(
-                    "fixed top-0 left-0 h-full w-64 bg-gray-100 p-4 transition-transform transform z-20",
+                    "fixed top-0 left-0 h-full w-64 max-w-[85vw] bg-gray-100 p-4 transition-transform transform z-20",
                     "md:relative md:translate-x-0",
                     isOpen ? "translate-x-0" : "-translate-x-full"
                 )}

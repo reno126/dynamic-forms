@@ -31,10 +31,10 @@ export function FormFieldBuilder({ index, control, register, remove, errors }: F
         <div
             role="group"
             aria-label={`Field ${index + 1}`}
-            className="rounded-md border bg-gray-50 p-4 form-field-builder-item"
+            className="rounded-md border bg-gray-50 p-3 sm:p-4 form-field-builder-item"
             data-testid={`form-field-builder-item-${index}`}
         >
-            <div className="flex flex-col md:flex-row md:items-start md:space-x-2 space-y-4 md:space-y-0">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start">
                 <div className="flex-1 space-y-1">
                     <Label htmlFor={`fields.${index}.label`} className="sr-only">
                         Field label

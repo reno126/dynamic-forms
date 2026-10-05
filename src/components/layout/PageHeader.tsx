@@ -8,19 +8,19 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, action }: PageHeaderProps) {
     return (
-        <div className="sm:flex sm:items-center sm:justify-between">
-            <div>
+        <div className="gap-4 sm:flex sm:items-center sm:justify-between">
+            <div className="min-w-0">
                 <h1
-                    className="text-2xl font-semibold text-gray-900"
+                    className="text-2xl font-semibold text-gray-900 wrap-anywhere"
                     data-testid={`page-header-${title.toLowerCase().replace(/\s+/g, '-')}`}
                 >
                     {title}
                 </h1>
                 {description && (
-                    <p className="mt-2 text-sm text-gray-700">{description}</p>
+                    <p className="mt-2 text-sm text-gray-700 wrap-anywhere">{description}</p>
                 )}
             </div>
-            {action && <div className="mt-4 sm:ml-16 sm:mt-0">{action}</div>}
+            {action && <div className="mt-3 min-w-0 sm:mt-0">{action}</div>}
         </div>
     );
 } 

@@ -23,7 +23,7 @@ export default function FormsPage() {
     );
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             <PageHeader
                 title="My Forms"
                 description="A list of all the form definitions you have created."

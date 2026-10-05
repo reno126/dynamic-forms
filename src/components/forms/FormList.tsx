@@ -24,7 +24,7 @@ export function FormList() {
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[250px]">Form Name</TableHead>
+                    <TableHead>Form Name</TableHead>
                     <TableHead>Description</TableHead>
                     <TableHead className="text-right">Fields</TableHead>
                 </TableRow>
@@ -32,7 +32,7 @@ export function FormList() {
             <TableBody>
                 {formDefinitions.map((form: FormDefinition) => (
                     <TableRow key={form.id}>
-                        <TableCell className="font-medium">
+                            <TableCell className="min-w-0 whitespace-normal font-medium wrap-anywhere">
                             <Link
                                 href={`/forms/${form.id}`}
                                 className="hover:underline"
@@ -40,7 +40,7 @@ export function FormList() {
                                 {form.name}
                             </Link>
                         </TableCell>
-                        <TableCell>{form.description}</TableCell>
+                            <TableCell className="whitespace-normal wrap-anywhere">{form.description}</TableCell>
                         <TableCell className="text-right">{form.fields.length}</TableCell>
                     </TableRow>
                 ))}

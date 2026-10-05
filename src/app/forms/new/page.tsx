@@ -11,7 +11,6 @@ import { CreateFormValues, FormBuilderField } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/lib/ui/card';
 import { nanoid } from 'nanoid';
 import { FormFieldBuilder } from '@/components/forms/FormFieldBuilder';
-import { PageWrapper } from '@/components/layout/PageWrapper';
 import { BackLinkButton } from '@/components/ui/BackLinkButton';
 
 function createEmptyDefaultField(): FormBuilderField {
@@ -60,9 +59,9 @@ export default function CreateFormPage() {
     };
 
     return (
-        <PageWrapper>
+        <>
             <BackLinkButton href="/forms" text="Back to all forms" />
-            <div className="mx-auto max-w-4xl">
+            <div className="mx-auto mt-4 max-w-4xl sm:mt-0">
                 <div className="space-y-2">
                     <h1 className="text-3xl font-bold">Create a New Form</h1>
                 </div>
@@ -76,7 +75,7 @@ export default function CreateFormPage() {
                         <CardHeader>
                             <CardTitle>Create New Form</CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-6">
+                        <CardContent className="space-y-5 px-4 sm:space-y-6 sm:px-6">
                             <div className="space-y-2">
                                 <Label htmlFor="name">Form Name</Label>
                                 <Input
@@ -139,6 +138,6 @@ export default function CreateFormPage() {
                     </div>
                 </form>
             </div>
-        </PageWrapper>
+        </>
     );
 }

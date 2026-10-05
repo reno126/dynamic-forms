@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { Button } from '@/lib/ui/button';
-import { PageWrapper } from '@/components/layout/PageWrapper';
 import { Card, CardContent, CardHeader, CardTitle } from '@/lib/ui/card';
 
 export default function GlobalError({
@@ -17,7 +16,7 @@ export default function GlobalError({
     }, [error]);
 
     return (
-        <PageWrapper>
+        <>
             <div className="flex h-full items-center justify-center">
                 <Card className="w-full max-w-md text-center">
                     <CardHeader>
@@ -31,6 +30,6 @@ export default function GlobalError({
                     </CardContent>
                 </Card>
             </div>
-        </PageWrapper>
+        </>
     );
 } 

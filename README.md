@@ -20,6 +20,10 @@ An interactive frontend demo for building custom forms and managing their submis
 
 ---
 
+## 💡 Motivation?
+
+Dynamic Forms is a demo app for exploring IndexedDB in a practical frontend workflow: define forms, save records, and revisit them after a refresh. Dexie.js keeps browser database operations approachable, while the UI stays focused on creating, reading, updating, and deleting local data. The app is intentionally small so the IndexedDB persistence model is easy to follow.
+
 ## ✨ What you can do
 
 | Build | Collect | Manage |

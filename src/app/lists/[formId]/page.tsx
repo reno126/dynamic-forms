@@ -11,7 +11,6 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { useModal } from '@/contexts/ModalContext';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { BackLinkButton } from '@/components/ui/BackLinkButton';
-import { PageWrapper } from '@/components/layout/PageWrapper';
 
 interface RecordsListPageProps {
     params: Promise<{
@@ -31,10 +30,10 @@ function RecordsListView({ formId }: { formId: string }) {
 
     if (formDefinition === null) {
         return (
-            <PageWrapper>
+            <>
                 <BackLinkButton href="/lists" text="Back to all lists" />
-                <p>Form not found.</p>
-            </PageWrapper>
+                <p className="mt-4">Form not found.</p>
+            </>
         );
     }
 
@@ -53,7 +52,7 @@ function RecordsListView({ formId }: { formId: string }) {
     };
 
     const action = (
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
             {hasRecords && (
                 <Button variant="destructive" onClick={handleDeleteAll} data-testid="delete-all-records-button">
                     Delete All Records
@@ -69,7 +68,7 @@ function RecordsListView({ formId }: { formId: string }) {
     );
 
     return (
-        <PageWrapper>
+        <>
             <BackLinkButton href="/lists" text="Back to all lists" />
             <PageHeader
                 title={formDefinition.name}
@@ -77,7 +76,7 @@ function RecordsListView({ formId }: { formId: string }) {
                 action={action}
             />
 
-            <div className="mt-8">
+            <div className="mt-5 sm:mt-8">
                 {hasRecords ? (
                     <RecordsTable formDefinition={formDefinition} />
                 ) : (
@@ -93,7 +92,7 @@ function RecordsListView({ formId }: { formId: string }) {
                     />
                 )}
             </div>
-        </PageWrapper>
+        </>
     );
 }
 

@@ -57,9 +57,9 @@ export default function DashboardPage() {
   ], [totalForms, totalRecords]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <PageHeader title="Dashboard" />
-      <div className="mt-8 grid gap-6 md:grid-cols-2">
+      <div className="mt-5 grid gap-4 sm:mt-8 sm:gap-6 md:grid-cols-2">
         {dashboardCards.map((card) => (
           <DashboardCard
             key={card.title}

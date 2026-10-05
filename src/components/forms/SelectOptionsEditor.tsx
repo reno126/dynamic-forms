@@ -21,11 +21,12 @@ export function SelectOptionsEditor({ fieldIndex, control, register, errors }: S
     });
 
     return (
-        <div className="space-y-2 rounded-md border p-4">
+        <div className="space-y-2 rounded-md border p-3 sm:p-4">
             <Label>Options</Label>
             {fields.map((option, optionIndex) => (
-                <div key={option.id} className="flex items-center space-x-2">
+                <div key={option.id} className="flex min-w-0 flex-wrap items-center gap-2">
                     <Input
+                        className="min-w-0 flex-1"
                         {...register(`fields.${fieldIndex}.options.${optionIndex}.value`, {
                             required: 'Option value cannot be empty',
                         })}
@@ -34,7 +35,7 @@ export function SelectOptionsEditor({ fieldIndex, control, register, errors }: S
                         data-testid={`select-option-input-${optionIndex}`}
                     />
                     {errors.fields?.[fieldIndex]?.options?.[optionIndex]?.value && (
-                        <p className="text-sm text-red-500">
+                        <p className="w-full text-sm text-red-500">
                             {errors.fields[fieldIndex]?.options?.[optionIndex]?.value?.message}
                         </p>
                     )}

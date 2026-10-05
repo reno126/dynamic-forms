@@ -13,7 +13,7 @@ export default function ListsPage() {
     const hasForms = formDefinitions && formDefinitions.length > 0;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             <PageHeader
                 title="My Lists"
                 description="Select a form to view, add, or manage its records."
